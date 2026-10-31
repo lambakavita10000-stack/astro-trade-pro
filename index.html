@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASTRO TRADE PRO</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#080a10;--panel:#111722;--gold:#d8ad55;--text:#f5f0e5;--muted:#a8b0bd;--line:#293344;--green:#4ed49a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#18202c 0,#080a10 48%);color:var(--text);font-family:Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:17px 6%;border-bottom:1px solid var(--line);position:sticky;top:0;background:#080a10ed;z-index:3}
+.brand{font-weight:800;letter-spacing:1.5px;color:var(--gold)}nav{display:flex;gap:8px;flex-wrap:wrap}button,.btn{background:var(--gold);color:#17130a;border:0;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer}button.secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}button:disabled{opacity:.5;cursor:wait}
+main{max-width:1100px;margin:auto;padding:34px 18px 70px}.hero{text-align:center;padding:48px 10px 38px}.eyebrow{color:var(--gold);letter-spacing:3px;font-size:12px}.hero h1{font-size:clamp(34px,7vw,60px);margin:13px 0;color:var(--gold)}h2,h3{color:var(--gold)}.hero p{color:var(--muted);line-height:1.7;max-width:700px;margin:15px auto}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin:26px 0}.card,.box,.dash-card{background:linear-gradient(145deg,#151e2b,#0e131c);border:1px solid var(--line);border-radius:14px;padding:22px}.card h3{margin-top:0}.muted{color:var(--muted);line-height:1.6}.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.panel{display:none;max-width:100%;margin:22px auto}.panel.active{display:block}.box h2{margin-top:0}label{display:block;color:#d9dce2;font-size:14px;margin:13px 0 6px}input,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px}input[type=checkbox]{width:auto}small{color:var(--muted)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.wide{grid-column:1/-1}.notice{padding:12px;border-radius:8px;background:#192331;color:#cbd4df;font-size:13px;line-height:1.5;margin:14px 0}.status{margin:12px 0;padding:12px;border-radius:8px;display:none;line-height:1.5}.status.show{display:block}.status.error{background:#421f25;color:#ffd5d8}.status.ok{background:#123629;color:#c6ffe6}.report{border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0;background:#0b111a}.report h3{margin-top:0}.report p{white-space:pre-wrap;color:#d8dce4;line-height:1.6}.hidden{display:none!important}footer{text-align:center;color:#788392;border-top:1px solid var(--line);padding:22px;font-size:13px}
+.dashboard-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}.dash-card{min-height:130px}.dash-card .label{color:var(--muted);font-size:13px}.dash-card .value{font-size:22px;font-weight:700;margin-top:12px;color:var(--gold)}.dash-section{margin-top:20px}.dash-section h3{margin-bottom:10px}.pill{display:inline-block;border:1px solid #66532d;color:var(--gold);border-radius:20px;padding:5px 10px;font-size:12px}.empty{padding:14px;border:1px dashed #465268;border-radius:9px;color:var(--muted);line-height:1.6}.premium{border:1px solid #8b6b32;background:linear-gradient(145deg,#211b10,#111722 72%);box-shadow:0 10px 30px #0005}.schedule-time{font-size:22px;color:var(--gold);font-weight:800;margin:8px 0}.tagline{color:#f2d99e;font-size:12px;letter-spacing:1px}.plan-price{font-size:28px;color:var(--gold);font-weight:800;margin:12px 0}
+@media(max-width:560px){header{align-items:flex-start;gap:12px;flex-direction:column}.formgrid{grid-template-columns:1fr}.wide{grid-column:auto}.hero{padding-top:30px}}
+</style>
+</head>
+<body>
+<header><div class="brand">✦ ASTRO TRADE PRO</div><nav>
+<button class="secondary" onclick="showSection('home')">Home</button>
+<button class="secondary" onclick="showSection('register')">Register</button>
+<button class="secondary" onclick="showSection('login')">Login</button>
+<button id="adminNav" class="secondary hidden" onclick="openAdmin()">Admin</button>
+</nav></header>
+<main>
+<section id="home">
+<div class="hero"><div class="eyebrow">VEDIC ASTROLOGY • KP ASTROLOGY • NUMEROLOGY</div>
+<h1>ASTRO TRADE PRO</h1><p>Astrology-based research and personalized reports for your learning and market study. Apni birth details submit karein aur apne dashboard mein published report dekhein.</p>
+<div class="actions"><button onclick="showSection('register')">Create Account</button><button class="secondary" onclick="showSection('login')">Customer Login</button></div></div>
+<div class="cards">
+<div class="card"><h3>Vedic Astrology</h3><p class="muted">Traditional planetary analysis and personalized insights.</p></div>
+<div class="card"><h3>KP Astrology</h3><p class="muted">KP-based analysis using birth details.</p></div>
+<div class="card"><h3>Numerology</h3><p class="muted">Numerology insights based on your details.</p></div>
+<div class="card"><h3>Sector-Wise Market Analysis</h3><p class="muted">Banking, IT, Auto, Pharma, Metals, Energy, FMCG, Realty, Infrastructure aur Oil &amp; Gas sectors ka educational analysis.</p></div>
+</div>
+<section class="dash-section" aria-label="Premium daily astrology reports">
+<h2 style="text-align:center">✦ ASTRO PREMIUM — 3 DAILY UPDATES</h2>
+<p class="muted" style="text-align:center">Purely Vedic, KP and Numerology based market-cycle interpretation. No live market feed or share-price data is used.</p>
+<div class="cards">
+ <div class="card premium"><span class="tagline">PRE-MARKET</span><div class="schedule-time">8:30 AM</div><h3>Opening Outlook</h3><p class="muted">NIFTY 50 ke liye din ke grah-gochar, chandra-nakshatra aur jyotishiya tezi, mandi ya mixed sanket; 10 sectors ka outlook.</p></div>
+ <div class="card premium"><span class="tagline">MID-SESSION</span><div class="schedule-time">12:30 PM</div><h3>Intraday Astrology Update</h3><p class="muted">Us din ke badalte chandra-gati aur grah-sthiti ke aadhar par NIFTY aur sector-wise jyotishiya sanketon ka doosra update.</p></div>
+ <div class="card premium"><span class="tagline">POST-MARKET</span><div class="schedule-time">4:30 PM</div><h3>Closing & Next-Day Outlook</h3><p class="muted">Din ke jyotishiya cycle ka review aur agle trading day ke liye NIFTY 50 aur 10 sectors ka outlook.</p></div>
+</div>
+<div class="card premium"><h3>Premium Membership Benefits</h3><p class="muted">Har trading day 3 astrology reports · NIFTY 50 outlook · 10 sector-wise outlook · Vedic + KP + Numerology interpretation · purani reports ka dashboard archive.</p><p class="muted"><b>Membership pricing and payment activation:</b> Payment gateway abhi connect nahi hai; Premium access admin ke dwara backend membership record activate hone par milega.</p></div>
+</section>
+<div class="notice">Important: Ye reports sirf jyotishiya/shaikshanik interpretation hain. Inmein live ya historical market data, verified price trend, ya guaranteed market direction shamil nahi hai. Ye investment advice ya buy/sell recommendation nahi hain.</div>
+</section>
+
+<section id="register" class="panel"><div class="box"><h2>Create Your Account</h2><p class="muted">Registration ke liye email aur password zaroori hain. Birth details aapke account ke saath save hongi.</p>
+<form id="registerForm"><div class="formgrid">
+<div class="wide"><label>Full Name *</label><input id="regName" required maxlength="100"></div>
+<div><label>Mobile Number *</label><input id="regPhone" required inputmode="tel" maxlength="20"></div>
+<div><label>Email *</label><input id="regEmail" type="email" required autocomplete="email"></div>
+<div><label>Password *</label><input id="regPassword" type="password" required minlength="8" autocomplete="new-password"></div>
+<div><label>Date of Birth *</label><input id="regDob" type="date" required></div>
+<div><label>Time of Birth *</label><input id="regTob" type="time" required></div>
+<div class="wide"><label>Birth Place *</label><input id="regPlace" required maxlength="150" placeholder="City, State, Country"></div>
+</div><div class="notice"><label><input id="agree" type="checkbox" required> I agree that my details may be used to prepare my requested astrology report.</label></div>
+<button id="registerBtn" type="submit">Register</button></form><div id="registerMsg" class="status"></div></div></section>
+
+<section id="login" class="panel"><div class="box"><h2>Customer Login</h2><form id="loginForm">
+<label>Email</label><input id="loginEmail" type="email" required autocomplete="username">
+<label>Password</label><input id="loginPassword" type="password" required autocomplete="current-password">
+<br><br><button id="loginBtn" type="submit">Login</button></form><div id="loginMsg" class="status"></div></div></section>
+
+<section id="dashboard" class="panel">
+<div class="box">
+<div class="dashboard-head"><div><span class="pill">CUSTOMER AREA</span><h2>Customer Dashboard</h2><p id="welcome" class="muted"></p></div><button class="secondary" onclick="logout()">Logout</button></div>
+<div class="dash-grid">
+ <div class="dash-card"><div class="label">ACCOUNT STATUS</div><div class="value" id="accountStatus">Active</div><small>Signed in securely</small></div>
+ <div class="dash-card"><div class="label">SUBSCRIPTION</div><div class="value" id="subscriptionStatus">Not linked</div><small>Subscription data connection pending</small></div>
+ <div class="dash-card"><div class="label">PUBLISHED REPORTS</div><div class="value" id="reportCount">0</div><small>Your reports available in this account</small></div>
+</div>
+<div class="dash-section"><h3>Your Birth Details</h3><div id="birthInfo" class="empty">Loading...</div></div>
+<div class="dash-section"><h3>Generate Astrology Report</h3><p class="muted">Button dabate hi aaj ki NIFTY 50 aur 10 sectors ki astrology-only report taiyar hokar neeche dikh jayegi.</p><button id="generateReportBtn" onclick="generateMyReport()">Generate Report Now</button><div id="generateReportMsg" class="status"></div></div>
+<div class="dash-section"><h3>Your Published Reports</h3><div id="reportsArea" class="muted">Loading reports...</div></div>
+<div class="dash-grid dash-section">
+ <div class="dash-card"><h3>My Subscription</h3><p class="muted">Your plan name, validity and renewal status will appear here after subscription records are connected.</p><span class="pill">Awaiting subscription setup</span></div>
+ <div class="dash-card"><h3>Payment History</h3><p class="muted">Successful payments and receipts will appear here after the payment records and payment gateway are connected.</p><span class="pill">Awaiting payment setup</span></div>
+ <div class="dash-card"><h3>Premium Daily Schedule</h3><p class="muted">8:30 AM Pre-Market · 12:30 PM Mid-Session · 4:30 PM Closing & Next-Day Outlook.</p><span class="pill">3 astrology updates / trading day</span></div>
+</div>
+<div class="notice">Premium plan mein 3 daily astrology updates ka format hai. Scheduled report generation ke liye Supabase backend deployment aur active Premium membership record zaroori hai. Jyotishiya reports symbolic/educational interpretations hain; guaranteed market prediction ya financial advice nahi hain.</div>
+</div>
+</section>
+
+<section id="admin" class="panel">
+ <div class="box">
+  <div class="dashboard-head"><div><span class="pill">RESTRICTED AREA</span><h2>Admin Panel</h2><p class="muted">Premium customers ke liye automatic Pre-Market, Mid-Session aur Post-Market astrology reports backend se schedule hongi. Manual publishing bhi available hai.</p></div><button class="secondary" onclick="showSection('dashboard')">Back to Dashboard</button></div>
+  <div class="notice">Admin access is checked using the authenticated user's Supabase app_metadata.role = "admin". Database Row Level Security (RLS) must also authorize admin access. Never put the Supabase service-role key in this file.</div>
+  <div class="dash-section"><h3>Registered Customers</h3><button id="refreshCustomersBtn" onclick="loadAdminCustomers()">Refresh Customers</button><div id="adminCustomers" class="empty" style="margin-top:12px">Load customers to view the list.</div></div>
+  <div class="dash-section">
+   <h3>Publish Customer Report</h3>
+   <form id="adminReportForm">
+    <label>Premium Daily Update *</label>
+    <select id="adminReportSlot" required style="width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px">
+      <option value="">Select daily update</option>
+      <option value="Pre-Market · 8:30 AM">Pre-Market · 8:30 AM</option>
+      <option value="Mid-Session · 12:30 PM">Mid-Session · 12:30 PM</option>
+      <option value="Post-Market · 4:30 PM">Post-Market · 4:30 PM</option>
+    </select>
+    <label>Customer User ID *</label><input id="adminUserId" required placeholder="Supabase Auth user UUID">
+    <label>Report Category *</label>
+    <select id="adminReportCategory" required style="width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px">
+      <option value="">Select category</option>
+      <option value="KP Astrology">KP Astrology</option>
+      <option value="Share Market">Share Market</option>
+      <option value="Sector-Wise Analysis">Sector-Wise Analysis</option>
+      <option value="Vedic Astrology">Vedic Astrology</option>
+      <option value="Numerology">Numerology</option>
+    </select>
+    <label>Sector *</label>
+    <select id="adminSectorName" style="width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px">
+      <option value="">Select sector</option>
+      <option>Banking &amp; Finance</option><option>IT &amp; Technology</option><option>Auto &amp; Automobile</option>
+      <option>Pharma &amp; Healthcare</option><option>Metal &amp; Mining</option><option>Energy &amp; Power</option>
+      <option>FMCG</option><option>Realty</option><option>Infrastructure</option><option>Oil &amp; Gas</option>
+    </select>
+    <label>Report Title *</label><input id="adminReportTitle" required maxlength="160">
+    <label>Customer Summary</label><textarea id="adminSummary" rows="3"></textarea>
+    <label>Vedic Analysis</label><textarea id="adminVedic" rows="3"></textarea>
+    <label>KP Analysis</label><textarea id="adminKp" rows="3"></textarea>
+    <label>Numerology Analysis</label><textarea id="adminNumerology" rows="3"></textarea>
+    <label>Sector Astrology Outlook (jyotishiya tezi/mandi/mixed sanket)</label><textarea id="adminSector" rows="5" placeholder="Sirf grah-gochar, chandra-nakshatra, KP/Vedic sanket ke aadhar par: Tezi / Mandi / Mixed. Market-price ya technical data na likhein."></textarea>
+    <label>Stock Analysis</label><textarea id="adminStock" rows="3"></textarea>
+    <label>Market Outlook</label><textarea id="adminOutlook" rows="3"></textarea>
+    <label>Trading Timing</label><textarea id="adminTiming" rows="3"></textarea>
+    <br><button id="publishReportBtn" type="submit">Publish Report</button>
+   </form><div id="adminMsg" class="status"></div>
+  </div>
+ </div>
+</section>
+</main>
+<footer>© ASTRO TRADE PRO · Educational and informational use only</footer>
+<script>
+const SUPABASE_URL = "https://ahrnjncdcsdmguhvhlfj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ktg8SZPkNqOWie8OK2rtIQ_YBM22F9a";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+function showSection(id){
+ document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
+ if(id==='home'){document.getElementById('home').classList.remove('hidden');window.scrollTo(0,0);return;}
+ document.getElementById('home').classList.add('hidden');
+ document.getElementById(id).classList.add('active');window.scrollTo(0,0);
+}
+function message(id,text,type='ok'){const el=document.getElementById(id);el.textContent=text;el.className='status show '+type;}
+async function ensureCustomerRows(user, metadata){
+ const {data:profile,error:pErr}=await db.from('profiles').select('id').eq('id',user.id).maybeSingle();
+ if(pErr) throw pErr;
+ if(!profile){
+  const {error}=await db.from('profiles').insert({id:user.id,full_name:metadata.full_name||user.user_metadata?.full_name||'',phone:metadata.phone||user.user_metadata?.phone||'',email:user.email||''});
+  if(error) throw error;
+ }
+ const {data:birth,error:bErr}=await db.from('birth_profiles').select('id').eq('user_id',user.id).maybeSingle();
+ if(bErr) throw bErr;
+ const b=metadata.birth||user.user_metadata?.birth;
+ if(!birth && b){
+  const {error}=await db.from('birth_profiles').insert({user_id:user.id,birth_date:b.birth_date,birth_time:b.birth_time,birth_place:b.birth_place});
+  if(error) throw error;
+ }
+}
+document.getElementById('registerForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=document.getElementById('registerBtn');btn.disabled=true;
+ const details={full_name:document.getElementById('regName').value.trim(),phone:document.getElementById('regPhone').value.trim(),email:document.getElementById('regEmail').value.trim(),birth:{birth_date:document.getElementById('regDob').value,birth_time:document.getElementById('regTob').value,birth_place:document.getElementById('regPlace').value.trim()}};
+ try{
+  const {data,error}=await db.auth.signUp({email:details.email,password:document.getElementById('regPassword').value,options:{data:{full_name:details.full_name,phone:details.phone,birth:details.birth}}});
+  if(error) throw error;
+  if(data.user && data.session){await ensureCustomerRows(data.user,details);message('registerMsg','Registration successful! Ab aap login kar sakte hain.','ok');}
+  else{message('registerMsg','Account request successful. Apne email par verification link check karein. Verify karne ke baad Login karein; birth details account metadata mein safe rahengi.','ok');}
+  e.target.reset();
+ }catch(err){message('registerMsg',err.message||'Registration failed. Please try again.','error');}
+ finally{btn.disabled=false;}
+});
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=document.getElementById('loginBtn');btn.disabled=true;
+ try{
+  const {data,error}=await db.auth.signInWithPassword({email:document.getElementById('loginEmail').value.trim(),password:document.getElementById('loginPassword').value});
+  if(error) throw error;
+  await ensureCustomerRows(data.user,{});
+  await loadDashboard(data.user);await syncAdminVisibility(data.user);showSection('dashboard');
+ }catch(err){message('loginMsg',err.message||'Login failed.','error');}
+ finally{btn.disabled=false;}
+});
+async function generateMyReport(){
+ const btn=document.getElementById('generateReportBtn');
+ btn.disabled=true;btn.textContent='Report ban rahi hai...';
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError||!user) throw new Error('Pehle login karein.');
+  const {data,error}=await db.functions.invoke('generate-astrology-report',{body:{slot:'manual'}});
+  if(error) throw error;
+  if(data?.error) throw new Error(data.error);
+  message('generateReportMsg','Report taiyar ho gayi! Neeche aapki report dikh rahi hai.','ok');
+  await loadDashboard(user);
+ }catch(err){message('generateReportMsg','Report nahi ban paayi: '+(err.message||err)+'. Supabase Edge Function deploy hona zaroori hai.','error');}
+ finally{btn.disabled=false;btn.textContent='Generate Report Now';}
+}
+
+async function loadDashboard(user){
+ document.getElementById('welcome').textContent='Welcome, '+(user.user_metadata?.full_name||user.email);
+ const {data:birth,error:bErr}=await db.from('birth_profiles').select('birth_date,birth_time,birth_place').eq('user_id',user.id).maybeSingle();
+ document.getElementById('birthInfo').textContent=bErr?'Birth details load nahi ho paaye: '+bErr.message:(birth?`${birth.birth_date} · ${birth.birth_time} · ${birth.birth_place}`:'Birth details abhi available nahi hain.');
+ const area=document.getElementById('reportsArea');area.textContent='Loading reports...';
+ const {data:reports,error}=await db.from('reports').select('id,report_title,vedic_analysis,kp_analysis,numerology_analysis,sector_analysis,stock_analysis,market_outlook,trading_timing,customer_summary,created_at').eq('user_id',user.id).eq('is_published',true).order('created_at',{ascending:false});
+ if(error){area.textContent='Reports load nahi ho paaye: '+error.message;document.getElementById('reportCount').textContent='—';return;}
+ document.getElementById('reportCount').textContent=String(reports?.length||0);
+ if(!reports?.length){area.innerHTML='<div class="empty">Abhi aapke liye koi report publish nahi hui hai. Jab admin aapke account ke liye report publish karega, woh yahan dikhegi.</div>';return;}
+ area.innerHTML='';
+ reports.forEach(r=>{
+  const box=document.createElement('div');box.className='report';
+  const title=document.createElement('h3');title.textContent=r.report_title||'Your Report';box.appendChild(title);
+  const fields=[['Summary',r.customer_summary],['Vedic Analysis',r.vedic_analysis],['KP Analysis',r.kp_analysis],['Numerology',r.numerology_analysis],['Sector Analysis',r.sector_analysis],['Stock Analysis',r.stock_analysis],['Market Outlook',r.market_outlook],['Trading Timing',r.trading_timing]];
+  fields.forEach(([label,value])=>{if(value){const h=document.createElement('b');h.textContent=label;const p=document.createElement('p');p.textContent=value;box.append(h,p);}});
+  area.appendChild(box);
+ });
+}
+
+function isAdminUser(user){
+ return user?.app_metadata?.role === 'admin';
+}
+async function syncAdminVisibility(user){
+ document.getElementById('adminNav').classList.toggle('hidden', !isAdminUser(user));
+}
+async function openAdmin(){
+ const {data:{user},error}=await db.auth.getUser();
+ if(error || !isAdminUser(user)){alert('Admin access is not enabled for this account.');return;}
+ showSection('admin');
+ await loadAdminCustomers();
+}
+async function loadAdminCustomers(){
+ const area=document.getElementById('adminCustomers');
+ area.textContent='Loading customers...';
+ try{
+  const {data:profiles,error}=await db.from('profiles').select('id,full_name,phone,email').order('full_name');
+  if(error) throw error;
+  if(!profiles?.length){area.textContent='No customer profiles found.';return;}
+  area.innerHTML='';
+  profiles.forEach(p=>{
+   const row=document.createElement('div');row.className='report';
+   const name=document.createElement('h3');name.textContent=p.full_name||'Customer';row.appendChild(name);
+   const detail=document.createElement('p');detail.textContent=`Email: ${p.email||'—'} | Mobile: ${p.phone||'—'}`;
+   row.appendChild(detail);
+   const id=document.createElement('small');id.textContent='User ID: '+p.id;row.appendChild(id);
+   const choose=document.createElement('button');choose.textContent='Use this customer';choose.style.marginTop='10px';
+   choose.onclick=()=>{document.getElementById('adminUserId').value=p.id;document.getElementById('adminReportTitle').focus();};
+   row.appendChild(choose);area.appendChild(row);
+  });
+ }catch(err){area.textContent='Customer list load nahi hui: '+(err.message||err);}
+}
+document.getElementById('adminReportForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const btn=document.getElementById('publishReportBtn');btn.disabled=true;
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError) throw userError;
+  if(!isAdminUser(user)) throw new Error('Admin permission required.');
+  if(!document.getElementById('adminReportSlot').value) throw new Error('Please select the Premium daily update.');
+  if(document.getElementById('adminReportCategory').value==='Sector-Wise Analysis' && !document.getElementById('adminSectorName').value) throw new Error('Please select a sector.');
+  const report={
+   user_id:document.getElementById('adminUserId').value.trim(),
+   report_title:'['+document.getElementById('adminReportSlot').value+'] ['+document.getElementById('adminReportCategory').value+'] '+(document.getElementById('adminSectorName').value ? '['+document.getElementById('adminSectorName').value+'] ' : '')+document.getElementById('adminReportTitle').value.trim(),
+   customer_summary:document.getElementById('adminSummary').value.trim(),
+   vedic_analysis:document.getElementById('adminVedic').value.trim(),
+   kp_analysis:document.getElementById('adminKp').value.trim(),
+   numerology_analysis:document.getElementById('adminNumerology').value.trim(),
+   sector_analysis:document.getElementById('adminSector').value.trim(),
+   stock_analysis:document.getElementById('adminStock').value.trim(),
+   market_outlook:document.getElementById('adminOutlook').value.trim(),
+   trading_timing:document.getElementById('adminTiming').value.trim(),
+   is_published:true
+  };
+  const {error}=await db.from('reports').insert(report);
+  if(error) throw error;
+  message('adminMsg','Report successfully published for this customer.','ok');
+  e.target.reset();
+ }catch(err){message('adminMsg','Report publish nahi hui: '+(err.message||err),'error');}
+ finally{btn.disabled=false;}
+});
+
+async function logout(){await db.auth.signOut();showSection('home');}
+(async()=>{const {data}=await db.auth.getSession();if(data.session){try{await ensureCustomerRows(data.session.user,{});await loadDashboard(data.session.user);await syncAdminVisibility(data.session.user);showSection('dashboard');}catch(e){console.warn(e);}}})();
+</script>
+</body></html>
