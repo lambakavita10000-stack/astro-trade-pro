@@ -177,7 +177,7 @@ async function ensureCustomerRows(user, metadata){
 
 document.getElementById('registerForm').addEventListener('submit',async e=>{
  e.preventDefault();const btn=document.getElementById('registerBtn');btn.disabled=true;
- const details={full_name:document.getElementById('regName').value.trim(),phone:document.getElementById('regPhone').value.trim(),email:document.getElementById('regEmail').value.trim(),birth:{birth_date:document.getElementById('regDob').value,birth_time:document.getElementById('regTob').value,birth_place:document.getElementById('regPlace'].value.trim()}};
+ const details={full_name:document.getElementById('regName').value.trim(),phone:document.getElementById('regPhone').value.trim(),email:document.getElementById('regEmail').value.trim(),birth:{birth_date:document.getElementById('regDob').value,birth_time:document.getElementById('regTob').value,birth_place:document.getElementById('regPlace').value.trim()}};
  try{
   const {data,error}=await db.auth.signUp({email:details.email,password:document.getElementById('regPassword').value,options:{data:{full_name:details.full_name,phone:details.phone,birth:details.birth}}});
   if(error) throw error;
@@ -356,7 +356,7 @@ async function loadAdminCustomers(){
  const area=document.getElementById('adminCustomers');
  area.textContent='Loading customers...';
  try{
-  const {data:profiles,error}=await db.profiles.select('id,full_name,phone,email').order('full_name');
+  const {data:profiles,error}=await db.from('profiles').select('id,full_name,phone,email').order('full_name');
   if(error) throw error;
   if(!profiles?.length){area.textContent='No customers found.';return;}
   area.innerHTML='';
