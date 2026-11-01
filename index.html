@@ -278,21 +278,18 @@ document.getElementById('adminReportForm').addEventListener('submit',async e=>{
 });
 
 async function logout(){await db.auth.signOut();showSection('home');}
-(async()=>{const {data}=await db.auth.getSession();if(data.session){try{await ensureCustomerRows(data.session.user,{});await loadDashboard(data.session.user);await syncAdminVisibility(data.session.user);showSection('dashboard');}catch(e){console.warn(e);}}})();
-</script>
- <script>
-  // Supabase live report fetcher integration
-  async function fetchLiveReports() {
-    try {
-      https://ahrnjncdcsdmguhvhlfj.supabase.co/functions/v1/smooth-endpoint
-      const response = await fetch('https://ahrnjncdcsdmguhvhlfj.supabase.co/functions/v1/smooth-endpoint');
-
-      console.log("Live reports fetching initialized...");
-    } catch (e) {
-      console.error("Error fetching reports", e);
+<script>
+// Supabase live report fetcher integration
+async function fetchLiveReports() {
+  try {
+    const { data, error } = await db.from('reports').select('*').order('created_at', { ascending: false }).limit(1);
+    if (error) throw error;
+    if (data && data.length > 0) {
+      console.log("Latest Report loaded:", data[0]);
     }
+  } catch (e) {
+    console.error("Error fetching reports", e.message);
   }
-  window.addEventListener('DOMContentLoaded', fetchLiveReports);
- </script>
- 
-</body></html>
+}
+window.addEventListener('DOMContentLoaded', fetchLiveReports);
+</script>
