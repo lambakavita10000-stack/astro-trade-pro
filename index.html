@@ -1,452 +1,94 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ASTRO TRADE PRO - Institutional Backtesting & Research Engine</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{--bg:#080a10;--panel:#111722;--gold:#d8ad55;--text:#f5f0e5;--muted:#a8b0bd;--line:#293344;--green:#4ed49a;--red:#ff5252}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#18202c 0,#080a10 48%);color:var(--text);font-family:Arial,sans-serif}
-header{display:flex;justify-content:space-between;align-items:center;padding:17px 6%;border-bottom:1px solid var(--line);position:sticky;top:0;background:#080a10ed;z-index:3}
-.brand{font-weight:800;letter-spacing:1.5px;color:var(--gold)}nav{display:flex;gap:8px;flex-wrap:wrap}button,.btn{background:var(--gold);color:#17130a;border:0;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer}button.secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}button:disabled{opacity:.5;cursor:wait}
-main{max-width:1150px;margin:auto;padding:34px 18px 70px}.hero{text-align:center;padding:48px 10px 38px}.eyebrow{color:var(--gold);letter-spacing:3px;font-size:12px}.hero h1{font-size:clamp(34px,7vw,60px);margin:13px 0;color:var(--gold)}h2,h3{color:var(--gold)}.hero p{color:var(--muted);line-height:1.7;max-width:700px;margin:15px auto}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin:26px 0}.card,.box,.dash-card{background:linear-gradient(145deg,#151e2b,#0e131c);border:1px solid var(--line);border-radius:14px;padding:22px}.card h3{margin-top:0}.muted{color:var(--muted);line-height:1.6}.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
-.panel{display:none;max-width:100%;margin:22px auto}.panel.active{display:block}.box h2{margin-top:0}label{display:block;color:#d9dce2;font-size:14px;margin:13px 0 6px}input,select,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px}input[type=checkbox]{width:auto}small{color:var(--muted)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.wide{grid-column:1/-1}.notice{padding:12px;border-radius:8px;background:#192331;color:#cbd4df;font-size:13px;line-height:1.5;margin:14px 0}.status{margin:12px 0;padding:12px;border-radius:8px;display:none;line-height:1.5}.status.show{display:block}.status.error{background:#421f25;color:#ffd5d8}.status.ok{background:#123629;color:#c6ffe6}.report{border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0;background:#0b111a}.report h3{margin-top:0}.report p{white-space:pre-wrap;color:#d8dce4;line-height:1.6}.hidden{display:none!important}footer{text-align:center;color:#788392;border-top:1px solid var(--line);padding:22px;font-size:13px}
-.dashboard-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:18px 0}.dash-card{min-height:130px}.dash-card .label{color:var(--muted);font-size:13px}.dash-card .value{font-size:22px;font-weight:700;margin-top:12px;color:var(--gold)}.dash-section{margin-top:20px}.dash-section h3{margin-bottom:10px}.pill{display:inline-block;border:1px solid #66532d;color:var(--gold);border-radius:20px;padding:5px 10px;font-size:12px}.empty{padding:14px;border:1px dashed #465268;border-radius:9px;color:var(--muted);line-height:1.6}
-@media(max-width:560px){header{align-items:flex-start;gap:12px;flex-direction:column}.formgrid{grid-template-columns:1fr}.wide{grid-column:auto}.hero{padding-top:30px}}
-</style>
-</head>
-<body>
-<header><div class="brand">✦ ASTRO TRADE PRO</div><nav>
-<button class="secondary" onclick="showSection('home')">Home</button>
-<button class="secondary" onclick="showSection('register')">Register</button>
-<button class="secondary" onclick="showSection('login')">Login</button>
-<button id="adminNav" class="secondary hidden" onclick="openAdmin()">Admin</button>
-</nav></header>
-<main>
-<section id="home" class="active">
-<div class="hero"><div class="eyebrow">INSTITUTIONAL BACKTESTING & PREDICTION AUDIT ENGINE</div>
-<h1>ASTRO TRADE PRO</h1><p>Advanced multi-model intelligence platform featuring immutable historical prediction auditing, Vedic/KP models, and quantitative backtesting.</p>
-<div class="actions"><button onclick="showSection('register')">Create Account</button><button class="secondary" onclick="showSection('login')">Customer Login</button></div></div>
-</section>
+Transform the existing Astro Trade Pro project into a premium, institutional-style Market Intelligence and Research Platform.
 
-<section id="register" class="panel"><div class="box"><h2>Create Your Account</h2>
-<form id="registerForm"><div class="formgrid">
-<div class="wide"><label>Full Name *</label><input id="regName" required maxlength="100"></div>
-<div><label>Mobile Number *</label><input id="regPhone" required inputmode="tel" maxlength="20"></div>
-<div><label>Email *</label><input id="regEmail" type="email" required autocomplete="email"></div>
-<div><label>Password *</label><input id="regPassword" type="password" required minlength="8" autocomplete="new-password"></div>
-<div><label>Date of Birth *</label><input id="regDob" type="date" required></div>
-<div><label>Time of Birth *</label><input id="regTob" type="time" required></div>
-<div class="wide"><label>Birth Place *</label><input id="regPlace" required maxlength="150" placeholder="City, State, Country"></div>
-</div><div class="notice"><label><input id="agree" type="checkbox" required> I agree to multi-model prediction tracking and audit compliance.</label></div>
-<button id="registerBtn" type="submit">Register</button></form><div id="registerMsg" class="status"></div></div></section>
+Study the best features and user experience patterns of Trendlyne, Stoclio, QuantBuilt, and India Terminal. Use them as inspiration, but build an original and more comprehensive product.
 
-<section id="login" class="panel"><div class="box"><h2>Customer Login</h2><form id="loginForm">
-<label>Email</label><input id="loginEmail" type="email" required autocomplete="username">
-<label>Password</label><input id="loginPassword" type="password" required autocomplete="current-password">
-<br><br><button id="loginBtn" type="submit">Login</button></form><div id="loginMsg" class="status"></div></div></section>
+CORE REQUIREMENTS:
 
-<section id="dashboard" class="panel">
-<div class="box">
-<div class="dashboard-head"><div><span class="pill">QUANTITATIVE RESEARCH HUB</span><h2>Customer Dashboard</h2><p id="welcome" class="muted"></p></div><button class="secondary" onclick="logout()">Logout</button></div>
-<div class="dash-grid">
- <div class="dash-card"><div class="label">SYSTEM STATUS</div><div class="value" style="color:var(--green)">Active</div><small>Immutable Snapshot Mode</small></div>
- <div class="dash-card"><div class="label">COVERAGE</div><div class="value">Nifty, Bullion & Sectors</div><small>Vedic + KP + Technicals</small></div>
- <div class="dash-card"><div class="label">ARCHIVED REPORTS</div><div class="value" id="reportCount">0</div><small>Immutable logs</small></div>
-</div>
-<div class="dash-section"><h3>Your Birth Details</h3><div id="birthInfo" class="empty">Loading...</div></div>
+1. PROFESSIONAL MARKET TERMINAL
+   Create a premium dashboard covering NIFTY 50, BANK NIFTY, SENSEX, Gold, Silver, Crude Oil, Natural Gas and USD/INR.
 
-<!-- HISTORICAL REPLAY & BACKTEST AUDIT HUB -->
-<div class="dash-section" style="border: 1px solid var(--gold); background: linear-gradient(145deg, #1b2433, #0e131c); border-radius: 12px; padding: 20px;">
-  <h3 style="color:var(--gold)">✦ Historical Replay & Prediction Audit Hub</h3>
-  <p class="muted">Compare historical AI predictions against actual market outcomes with zero look-ahead bias.</p>
-  
-  <div class="formgrid" style="margin-bottom:14px;">
-    <div>
-      <label>Date Range Filter</label>
-      <select id="auditDateFilter" onchange="loadBacktestAudits()">
-        <option value="7">Last 7 Days</option>
-        <option value="30" selected>Last 30 Days</option>
-        <option value="90">Last 90 Days</option>
-        <option value="180">Last 6 Months</option>
-      </select>
-    </div>
-    <div>
-      <label>Instrument / Sector Filter</label>
-      <select id="auditInstrumentFilter" onchange="loadBacktestAudits()">
-        <option value="ALL">All Instruments & Sectors</option>
-        <option value="Nifty 50">Nifty 50</option>
-        <option value="Bank Nifty">Bank Nifty</option>
-        <option value="Gold">Gold</option>
-        <option value="Silver">Silver</option>
-        <option value="Crude Oil">Crude Oil</option>
-      </select>
-    </div>
-  </div>
+2. COMPLETE SECTOR INTELLIGENCE
+   Create separate analytical pages for every major market sector.
 
-  <div class="dash-grid" style="margin-bottom:15px;">
-    <div class="dash-card"><div class="label">SAMPLE SIZE (N)</div><div class="value" id="statSampleSize">0</div><small>Audited Records</small></div>
-    <div class="dash-card"><div class="label">DIRECTIONAL ACCURACY</div><div class="value" id="statAccuracy" style="color:var(--green)">0.00%</div><small>Out-of-sample success</small></div>
-    <div class="dash-card"><div class="label">F1 CALIBRATION SCORE</div><div class="value" id="statF1">0.00</div><small>Precision vs Recall</small></div>
-  </div>
+Each sector must show:
 
-  <button class="secondary" onclick="runLiveBacktestAudit()">▶ Execute Backtest Audit Run</button>
-  <div id="backtestAuditArea" style="margin-top:15px;" class="empty">Select filters and run audit to view historical verification logs.</div>
-</div>
+- Overall strength score out of 100.
+- Buying pressure versus selling pressure.
+- Institutional activity and volume.
+- Technical strength.
+- Vedic score.
+- KP score.
+- Numerology score.
+- Combined score.
+- Top performing and weakest stocks.
+- Support, resistance and trend outlook.
+- Bullish, bearish or neutral classification.
 
-<div class="dash-section">
-  <h3>Generate Automated Daily Research Report</h3>
-  <p class="muted">Select daily reporting session below to generate immutable predictions backed by Vedic, KP, and Technical indicators.</p>
-  <label>Select Report Session Slot *</label>
-  <select id="genMode" style="margin-bottom:12px">
-    <option value="Morning">Morning Report (8:30 AM) — Pre-Market Cues</option>
-    <option value="Afternoon">Afternoon Report (12:30 PM) — Intraday Reversal</option>
-    <option value="Evening">Evening Report (4:00 PM) — Post-Market Review</option>
-  </select>
-  <button id="generateReportBtn" onclick="generateAndSnapshotReport()">Generate & Snapshot Prediction</button>
-  <div id="generateReportMsg" class="status"></div>
-</div>
-<div class="dash-section"><h3>Your Immutable Research Reports Archive</h3><div id="reportsArea" class="muted">Loading archive...</div></div>
-</div>
-</section>
+3. SEPARATE RESEARCH ENGINES
+   Create independent modules for:
 
-<section id="admin" class="panel">
- <div class="box">
-  <div class="dashboard-head"><div><span class="pill">ADMIN COMMAND CENTER</span><h2>Admin Panel</h2><p class="muted">System management, customer list & immutable prediction auditing.</p></div><button class="secondary" onclick="showSection('dashboard')">Back to Dashboard</button></div>
-  <div class="dash-section">
-    <h3>Registered Customers</h3>
-    <button onclick="loadAdminCustomers()">Refresh Customers</button>
-    <div id="adminCustomers" class="empty" style="margin-top:12px">Load customers to view list.</div>
-  </div>
-  <div class="dash-section">
-   <h3>Publish Professional Research Report (Admin Override)</h3>
-   <button type="button" class="secondary" onclick="autoFillAdminReport()" style="margin-bottom:14px;background:#192331;color:var(--gold);border:1px solid var(--gold);">✦ Auto-Fill Master Research Data</button>
-   <form id="adminReportForm">
-    <label>Reporting Session Slot *</label>
-    <select id="adminReportSlot" required style="width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px">
-      <option value="">Select slot</option>
-      <option value="Morning">Morning (8:30 AM)</option>
-      <option value="Afternoon">Afternoon (12:30 PM)</option>
-      <option value="Evening">Evening (4:00 PM)</option>
-    </select>
-    <label>Customer User ID *</label><input id="adminUserId" required placeholder="Supabase Auth user UUID">
-    <label>Instrument *</label><input id="adminInstrument" required value="Nifty 50">
-    <label>Report Title *</label><input id="adminReportTitle" required maxlength="160">
-    <label>Predicted Direction *</label>
-    <select id="adminDirection" required style="width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px">
-      <option value="Bullish">Bullish</option>
-      <option value="Bearish">Bearish</option>
-      <option value="Sideways">Sideways</option>
-    </select>
-    <label>Confidence Score (0-100) *</label><input id="adminConfidence" type="number" required min="0" max="100" value="75">
-    <label>Executive & Summary</label><textarea id="adminSummary" rows="3"></textarea>
-    <label>Vedic & KP Predictions</label><textarea id="adminVedic" rows="3"></textarea>
-    <label>Technical & Combined AI Prediction</label><textarea id="adminTechnical" rows="3"></textarea>
-    <br><button id="publishReportBtn" type="submit">Publish & Snapshot Prediction</button>
-   </form><div id="adminMsg" class="status"></div>
-  </div>
- </div>
-</section>
-</main>
-<footer>© ASTRO TRADE PRO · Institutional Backtesting & Research Engine</footer>
-<script>
-const SUPABASE_URL = "https://ahrnjncdcsdmguhvhlfj.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ktg8SZPkNqOWie8OK2rtIQ_YBM22F9a";
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+- Vedic Astrology.
+- KP Astrology.
+- Numerology.
+- Technical Analysis.
+- Fundamental and Macro Analysis.
+- Market Sentiment.
 
-function showSection(id){
- document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
- if(id==='home'){document.getElementById('home').classList.remove('hidden');window.scrollTo(0,0);return;}
- document.getElementById('home').classList.add('hidden');
- document.getElementById(id).classList.add('active');window.scrollTo(0,0);
-}
-function message(id,text,type='ok'){const el=document.getElementById(id);el.textContent=text;el.className='status show '+type;}
+Each module must generate its own report, score, reasoning and historical performance.
 
-async function ensureCustomerRows(user, metadata){
- const {data:profile}=await db.from('profiles').select('id').eq('id',user.id).maybeSingle();
- if(!profile){
-  await db.from('profiles').insert({id:user.id,full_name:metadata.full_name||user.user_metadata?.full_name||'',phone:metadata.phone||user.user_metadata?.phone||'',email:user.email||''});
- }
- const {data:birth}=await db.from('birth_profiles').select('id').eq('user_id',user.id).maybeSingle();
- const b=metadata.birth||user.user_metadata?.birth;
- if(!birth && b){
-  await db.from('birth_profiles').insert({user_id:user.id,birth_date:b.birth_date,birth_time:b.birth_time,birth_place:b.birth_place});
- }
-}
+4. COMBINED INTELLIGENCE ENGINE
+   Create a transparent multi-factor scoring system.
 
-document.getElementById('registerForm').addEventListener('submit',async e=>{
- e.preventDefault();const btn=document.getElementById('registerBtn');btn.disabled=true;
- const details={full_name:document.getElementById('regName').value.trim(),phone:document.getElementById('regPhone').value.trim(),email:document.getElementById('regEmail').value.trim(),birth:{birth_date:document.getElementById('regDob').value,birth_time:document.getElementById('regTob').value,birth_place:document.getElementById('regPlace').value.trim()}};
- try{
-  const {data,error}=await db.auth.signUp({email:details.email,password:document.getElementById('regPassword').value,options:{data:{full_name:details.full_name,phone:details.phone,birth:details.birth}}});
-  if(error) throw error;
-  if(data.user && data.session){await ensureCustomerRows(data.user,details);message('registerMsg','Registration successful! Login karein.','ok');}
-  else{message('registerMsg','Account created. Check email verification link.','ok');}
-  e.target.reset();
- }catch(err){message('registerMsg',err.message||'Registration failed.','error');}
- finally{btn.disabled=false;}
-});
+Show individual model scores, combined score, confidence level, risk level and reasons behind the final result.
 
-document.getElementById('loginForm').addEventListener('submit',async e=>{
- e.preventDefault();const btn=document.getElementById('loginBtn');btn.disabled=true;
- try{
-  const {data,error}=await db.auth.signInWithPassword({email:document.getElementById('loginEmail').value.trim(),password:document.getElementById('loginPassword').value});
-  if(error) throw error;
-  await ensureCustomerRows(data.user,{});
-  await loadDashboard(data.user);await syncAdminVisibility(data.user);showSection('dashboard');
- }catch(err){message('loginMsg',err.message||'Login failed.','error');}
- finally{btn.disabled=false;}
-});
+Do not use arbitrary weights as proven facts. Make weights configurable and optimize them using historical validation.
 
-async function generateAndSnapshotReport() {
- const btn = document.getElementById('generateReportBtn');
- const mode = document.getElementById('genMode').value;
- btn.disabled = true; btn.textContent = 'Generating & Snapshotting...';
- try {
-  const {data:{user},error:userError} = await db.auth.getUser();
-  if(userError||!user) throw new Error('Pehle login karein.');
+5. PROFESSIONAL BACKTESTING
+   Save every prediction as an immutable historical snapshot.
 
-  const now = new Date();
-  const dateStr = now.toISOString().split('T')[0];
-  const reportTitle = `${mode} Report: Nifty 50 & Sectors Quantitative Analysis`;
-  const summaryText = `Automated ${mode} research report generated with Vedic degrees, KP sub-lords, and technical indicators.`;
-  const vedicTxt = "Sun 14° trine Jupiter, activating wealth houses.";
-  const kpTxt = "2nd & 11th cuspal sub-lords strongly favorable.";
-  const techTxt = "RSI 58.4 (Bullish), MACD positive crossover.";
-  const dir = (now.getDate() % 2 === 0) ? 'Bullish' : 'Sideways';
+Compare original predictions against actual market outcomes.
 
-  const {data: repData, error: repErr} = await db.from('reports').insert({
-   user_id: user.id,
-   report_title: reportTitle,
-   customer_summary: summaryText,
-   vedic_analysis: vedicTxt,
-   kp_analysis: kpTxt,
-   numerology_analysis: techTxt,
-   sector_analysis: "Banking, Auto (Kharidari) | Metal (Bikwali)",
-   stock_analysis: "Focus long on market leaders.",
-   market_outlook: "Combined Score: Bullish 74/100",
-   trading_timing: "Open (09:15) - Close (15:30)",
-   is_published: true
-  }).select().single();
+Display:
 
-  if(repErr) throw repErr;
+- 7-day, 30-day, 90-day and 365-day performance.
+- Directional accuracy.
+- Bullish and bearish accuracy.
+- Prediction versus actual movement.
+- Model-wise performance.
+- Combined model performance.
+- Win rate, drawdown, profit factor and risk-adjusted returns wherever applicable.
+- Incorrect predictions and historical failures.
 
-  await db.from('historical_predictions').insert({
-   report_id: repData.id,
-   user_id: user.id,
-   report_date: dateStr,
-   report_timestamp: now.toISOString(),
-   report_type: mode,
-   instrument: 'Nifty 50',
-   sector: 'Banking',
-   predicted_direction: dir,
-   predicted_range_low: 24100,
-   predicted_range_high: 24450,
-   support_levels: [24150, 24000],
-   resistance_levels: [24450, 24600],
-   confidence_score: 76,
-   vedic_prediction: vedicTxt,
-   kp_prediction: kpTxt,
-   numerology_prediction: "Root Number Active",
-   technical_prediction: techTxt,
-   combined_ai_prediction: "Bullish 74/100",
-   model_version: "v2.0-institutional",
-   input_data_timestamp: now.toISOString(),
-   original_content: repData
-  });
+Never fabricate historical accuracy or reconstruct predictions as if they existed before the market event.
 
-  message('generateReportMsg', 'Report generated and immutable prediction snapshot saved successfully!', 'ok');
-  await loadDashboard(user);
-  loadBacktestAudits();
- } catch(err) {
-  message('generateReportMsg', 'Generation failed: ' + (err.message||err), 'error');
- } finally {
-  btn.disabled = false; btn.textContent = 'Generate & Snapshot Prediction';
- }
-}
+6. PREMIUM CUSTOMER EXPERIENCE
+   Create a professional terminal-style interface with separate tabs, interactive charts, scorecards, sector heatmaps, performance graphs and downloadable PDF reports.
 
-async function loadBacktestAudits() {
-    const area = document.getElementById('backtestAuditArea');
-    const instrument = document.getElementById('auditInstrumentFilter').value;
-    area.innerHTML = '<div class="muted">Loading immutable predictions and auditing outcomes...</div>';
+7. REPORT AUTOMATION
+   Support scheduled morning, afternoon and evening reports with clear timestamps and market-session definitions.
 
-    try {
-        let query = db.from('historical_predictions').select('*').order('report_timestamp', { ascending: false }).limit(40);
-        if (instrument !== 'ALL') {
-            query = query.or(`instrument.eq.${instrument},sector.eq.${instrument}`);
-        }
+8. DATA QUALITY
+   Show data source, last updated time, missing data warnings and confidence limitations.
 
-        const { data, error } = await query;
-        if (error) throw error;
+Never invent market prices, technical indicators, planetary positions or historical results.
 
-        if (!data || data.length === 0) {
-            area.innerHTML = '<div class="empty">No historical prediction snapshots found. Generate a report above to initialize audit tracking.</div>';
-            document.getElementById('statSampleSize').textContent = '0';
-            document.getElementById('statAccuracy').textContent = '0.00%';
-            document.getElementById('statF1').textContent = '0.00';
-            return;
-        }
+9. PREMIUM SUBSCRIPTION
+   Design meaningful Free, Premium and Professional plans. Premium features must provide measurable research value, historical performance, deeper analysis and downloadable reports.
 
-        area.innerHTML = '';
-        let correctCount = 0;
+10. ENGINEERING REQUIREMENTS
+    First inspect the complete existing repository, frontend, backend, database schema, authentication, current Edge Functions and existing customer/admin workflows.
 
-        data.forEach((pred, idx) => {
-            const card = document.createElement('div');
-            card.className = 'report';
-            const isMatch = idx % 3 !== 0; 
-            if (isMatch) correctCount++;
+Preserve working functionality.
 
-            card.innerHTML = `
-                <h4>🛡️ Immutable Snapshot #${pred.prediction_id.slice(0,8)} — ${pred.instrument} (${pred.report_type})</h4>
-                <p><b>Report Date:</b> ${pred.report_date} | <b>Timestamp:</b> ${new Date(pred.report_timestamp).toLocaleTimeString()}</p>
-                <p><b>Predicted Direction:</b> <span style="color:${pred.predicted_direction === 'Bullish' ? 'var(--green)' : 'var(--gold)'}">${pred.predicted_direction}</span> (Confidence: ${pred.confidence_score}%)</p>
-                <p><b>Model Breakdown:</b> Vedic: ${pred.vedic_prediction} | KP: ${pred.kp_prediction}</p>
-                <p><b>Audit Validation Status:</b> <span class="pill" style="border-color:${isMatch ? 'var(--green)' : 'var(--red)'}; color:${isMatch ? 'var(--green)' : 'var(--red)'};">${isMatch ? '✓ Verified True Positive' : '✗ Direction Mismatch'}</span></p>
-            `;
-            area.appendChild(card);
-        });
+Do not assume database table names or columns. Do not create duplicate functions or duplicate tables.
 
-        const sampleSize = data.length;
-        document.getElementById('statSampleSize').textContent = sampleSize;
-        const accuracy = ((correctCount / sampleSize) * 100).toFixed(2);
-        document.getElementById('statAccuracy').textContent = accuracy + '%';
-        document.getElementById('statF1').textContent = (accuracy / 100 * 1.12).toFixed(2);
+Create a proper implementation plan, database migrations, backend services, frontend pages, scoring engine and testing strategy.
 
-    } catch (err) {
-        area.innerHTML = `<div class="status error show">Audit load error: ${err.message}</div>`;
-    }
-}
+Implement in small verifiable stages. Test every stage before proceeding.
 
-function runLiveBacktestAudit() {
-    alert("Out-of-sample backtest audit initiated. Verifying zero look-ahead bias and immutable prediction constraints across all selected filters.");
-    loadBacktestAudits();
-}
+Do not claim a feature is complete unless it actually works.
 
-async function loadDashboard(user){
- document.getElementById('welcome').textContent='Welcome, '+(user.user_metadata?.full_name||user.email);
- const {data:birth}=await db.from('birth_profiles').select('birth_date,birth_time,birth_place').eq('user_id',user.id).maybeSingle();
- document.getElementById('birthInfo').textContent=birth?`${birth.birth_date} · ${birth.birth_time} · ${birth.birth_place}`:'Birth details pending.';
- const area=document.getElementById('reportsArea');area.textContent='Loading archive...';
- const {data:reports,error}=await db.from('reports').select('*').eq('user_id',user.id).order('created_at',{ascending:false});
- if(error){area.textContent='Reports load error: '+error.message;document.getElementById('reportCount').textContent='—';return;}
- document.getElementById('reportCount').textContent=String(reports?.length||0);
- if(!reports?.length){area.innerHTML='<div class="empty">No reports found. Generate one above.</div>';return;}
- area.innerHTML='';
- reports.forEach(r=>{
-  const box=document.createElement('div');box.className='report';
-  const title=document.createElement('h3');title.textContent=r.report_title||'Research Report';box.appendChild(title);
-  const fields=[['Summary',r.customer_summary],['Vedic',r.vedic_analysis],['KP',r.kp_analysis],['Technicals',r.numerology_analysis],['Sectors',r.sector_analysis]];
-  fields.forEach(([label,value])=>{if(value){const h=document.createElement('b');h.textContent=label;const p=document.createElement('p');p.textContent=value;box.append(h,p);}});
-  area.appendChild(box);
- });
- loadBacktestAudits();
-}
+IMPORTANT:
+Astrology-based analysis must remain separately identifiable from statistically validated market analysis. Never present symbolic astrology scores as scientifically proven financial predictions.
 
-function isAdminUser(user){ return user?.app_metadata?.role === 'admin'; }
-async function syncAdminVisibility(user){ document.getElementById('adminNav').classList.toggle('hidden', !isAdminUser(user)); }
-async function openAdmin(){
- const {data:{user},error}=await db.auth.getUser();
- if(error || !isAdminUser(user)){alert('Admin access required.');return;}
- showSection('admin');
- await loadAdminCustomers();
-}
-
-async function loadAdminCustomers(){
- const area=document.getElementById('adminCustomers');
- area.textContent='Loading customers...';
- try{
-  const {data:profiles,error}=await db.from('profiles').select('id,full_name,phone,email').order('full_name');
-  if(error) throw error;
-  if(!profiles?.length){area.textContent='No customers found.';return;}
-  area.innerHTML='';
-  profiles.forEach(p=>{
-   const row=document.createElement('div');row.className='report';
-   const name=document.createElement('h3');name.textContent=p.full_name||'Customer';row.appendChild(name);
-   const detail=document.createElement('p');detail.textContent=`Email: ${p.email||'—'} | Mobile: ${p.phone||'—'}`;
-   row.appendChild(detail);
-   const id=document.createElement('small');id.textContent='User ID: '+p.id;row.appendChild(id);
-   const choose=document.createElement('button');choose.textContent='Use this customer ID';choose.style.marginTop='10px';
-   choose.onclick=()=>{document.getElementById('adminUserId').value=p.id;document.getElementById('adminReportTitle').focus();};
-   row.appendChild(choose);
-   area.appendChild(row);
-  });
- }catch(err){area.textContent='Customer load failed: '+(err.message||err);}
-}
-
-function autoFillAdminReport(){
- document.getElementById('adminReportSlot').value = 'Morning';
- document.getElementById('adminReportTitle').value = 'Nifty 50 Institutional Backtest Snapshot';
- document.getElementById('adminInstrument').value = 'Nifty 50';
- document.getElementById('adminDirection').value = 'Bullish';
- document.getElementById('adminConfidence').value = '82';
- document.getElementById('adminSummary').value = 'Pre-market opening bias positive. Support: 24,150, Resistance: 24,450.';
- document.getElementById('adminVedic').value = 'Sun 14° trine Jupiter.';
- document.getElementById('adminTechnical').value = 'RSI 58.4 (Bullish), MACD positive crossover.';
- alert('Admin form auto-filled!');
-}
-
-document.getElementById('adminReportForm').addEventListener('submit',async e=>{
- e.preventDefault();
- const btn=document.getElementById('publishReportBtn');btn.disabled=true;
- try{
-  const {data:{user},error:userError}=await db.auth.getUser();
-  if(userError) throw userError;
-  if(!isAdminUser(user)) throw new Error('Admin permission required.');
-  
-  const now = new Date();
-  const slot = document.getElementById('adminReportSlot').value;
-  const report={
-   user_id:document.getElementById('adminUserId').value.trim(),
-   report_title:`${slot} Report: ` + document.getElementById('adminReportTitle').value.trim(),
-   customer_summary:document.getElementById('adminSummary').value.trim(),
-   vedic_analysis:document.getElementById('adminVedic').value.trim(),
-   kp_analysis:document.getElementById('adminVedic').value.trim(),
-   numerology_analysis:document.getElementById('adminTechnical').value.trim(),
-   sector_analysis: "Banking, IT (Kharidari)",
-   stock_analysis: "Focus long on leaders.",
-   market_outlook: "Confidence: " + document.getElementById('adminConfidence').value + "%",
-   is_published:true
-  };
-  const {data:repData,error}=await db.from('reports').insert(report).select().single();
-  if(error) throw error;
-
-  await db.from('historical_predictions').insert({
-   report_id: repData.id,
-   user_id: document.getElementById('adminUserId').value.trim(),
-   report_date: now.toISOString().split('T')[0],
-   report_timestamp: now.toISOString(),
-   report_type: slot,
-   instrument: document.getElementById('adminInstrument').value,
-   predicted_direction: document.getElementById('adminDirection').value,
-   confidence_score: parseFloat(document.getElementById('adminConfidence').value),
-   vedic_prediction: document.getElementById('adminVedic').value,
-   technical_prediction: document.getElementById('adminTechnical').value,
-   combined_ai_prediction: "Audited Admin Snapshot",
-   model_version: "v2.0-institutional",
-   input_data_timestamp: now.toISOString(),
-   original_content: repData
-  });
-
-  alert('Admin report published and immutable prediction snapshot saved successfully!');
-  e.target.reset();
-  loadBacktestAudits();
- }catch(err){alert('Publish failed: '+(err.message||err));}
- finally{btn.disabled=false;}
-});
-
-async function logout(){ await db.auth.signOut(); showSection('home'); }
-
-window.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const { data: { session } } = await db.auth.getSession();
-    if (session?.user) {
-      await ensureCustomerRows(session.user, {});
-      await syncAdminVisibility(session.user);
-      loadBacktestAudits();
-    }
-  } catch (err) { console.error("Session error:", err); }
-});
-</script>
-</body>
-</html>
+The final product must look and function like a premium professional research terminal, not a basic astrology report generator.
