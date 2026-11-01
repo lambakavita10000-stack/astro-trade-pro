@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ASTRO TRADE PRO - Ultra-Precision Financial Engine</title>
+<title>ASTRO TRADE PRO - Nifty & Commodities Precision Engine</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#080a10;--panel:#111722;--gold:#d8ad55;--text:#f5f0e5;--muted:#a8b0bd;--line:#293344;--green:#4ed49a;--red:#ff5252}
@@ -25,8 +25,8 @@ main{max-width:1100px;margin:auto;padding:34px 18px 70px}.hero{text-align:center
 </nav></header>
 <main>
 <section id="home" class="active">
-<div class="hero"><div class="eyebrow">ULTRA-SPECIFIC INSTITUTIONAL ASTRO ENGINE</div>
-<h1>ASTRO TRADE PRO</h1><p>Institutional-grade astrological engine delivering exact session-wise Nifty direction and sector Kharidari/Bikwali breakdown.</p>
+<div class="hero"><div class="eyebrow">NIFTY, COMMODITIES (GOLD/SILVER/CRUDE) & SECTOR ENGINE</div>
+<h1>ASTRO TRADE PRO</h1><p>Institutional-grade astrological platform delivering exact session-wise Nifty, Gold, Silver, Crude Oil and sector Kharidari/Bikwali breakdown.</p>
 <div class="actions"><button onclick="showSection('register')">Create Account</button><button class="secondary" onclick="showSection('login')">Customer Login</button></div></div>
 </section>
 
@@ -51,19 +51,19 @@ main{max-width:1100px;margin:auto;padding:34px 18px 70px}.hero{text-align:center
 <div class="box">
 <div class="dashboard-head"><div><span class="pill">PRECISION ENGINE</span><h2>Customer Dashboard</h2><p id="welcome" class="muted"></p></div><button class="secondary" onclick="logout()">Logout</button></div>
 <div class="dash-grid">
- <div class="dash-card"><div class="label">STATUS</div><div class="value" style="color:var(--green)">Active</div><small>Ultra-Detailed Mode</small></div>
- <div class="dash-card"><div class="label">TARGET INDEX</div><div class="value">NIFTY 50</div><small>Pin-Point Session Mapping</small></div>
+ <div class="dash-card"><div class="label">STATUS</div><div class="value" style="color:var(--green)">Active</div><small>Nifty + Commodities Mode</small></div>
+ <div class="dash-card"><div class="label">TARGET MARKETS</div><div class="value">Nifty & Bullion/Crude</div><small>Pin-Point Mapping</small></div>
  <div class="dash-card"><div class="label">ARCHIVED REPORTS</div><div class="value" id="reportCount">0</div><small>Saved records</small></div>
 </div>
 <div class="dash-section"><h3>Your Birth Details</h3><div id="birthInfo" class="empty">Loading...</div></div>
 <div class="dash-section">
-  <h3>Generate Detailed Nifty 3-Session Report</h3>
-  <p class="muted">Select session below to get deep astrological breakdown for Nifty 50, including opening cues, intraday reversal windows, closing setups, and exact sector Kharidari / Bikwali tracking.</p>
-  <label>Select Nifty Trading Session / Slot *</label>
+  <h3>Generate Detailed Nifty & Commodities Report</h3>
+  <p class="muted">Select session below to get deep astrological breakdown for Nifty 50, Gold, Silver, Crude Oil, and all 10 market sectors.</p>
+  <label>Select Trading Session / Slot *</label>
   <select id="genMode" style="margin-bottom:12px">
-    <option value="Pre-Market · 8:30 AM">1. Pre-Market Session (8:30 AM) — Opening Direction & Heavyweight Setup</option>
+    <option value="Pre-Market · 8:30 AM">1. Pre-Market Session (8:30 AM) — Nifty & Commodity Opening Cues</option>
     <option value="Mid-Session · 12:30 PM">2. Mid-Session (12:30 PM) — Intraday Reversal & Trap Zone Tracking</option>
-    <option value="Post-Market · 4:30 PM">3. Post-Market (4:30 PM) — Closing Strength & Next-Day Carry-Forward</option>
+    <option value="Post-Market · 4:30 PM">3. Post-Market (4:30 PM) — Closing Strength & Carry-Forward Setup</option>
     <option value="Full Day Overview">Full Day Comprehensive Macro Overview</option>
     <option value="Weekly Analysis">Weekly Horizon & Nodal Shifts</option>
   </select>
@@ -76,16 +76,39 @@ main{max-width:1100px;margin:auto;padding:34px 18px 70px}.hero{text-align:center
 
 <section id="admin" class="panel">
  <div class="box">
-  <div class="dashboard-head"><div><span class="pill">ADMIN COMMAND CENTER</span><h2>Admin Panel</h2><p class="muted">System management & manual monitoring.</p></div><button class="secondary" onclick="showSection('dashboard')">Back to Dashboard</button></div>
+  <div class="dashboard-head"><div><span class="pill">ADMIN COMMAND CENTER</span><h2>Admin Panel</h2><p class="muted">System management, customer list & manual report publishing.</p></div><button class="secondary" onclick="showSection('dashboard')">Back to Dashboard</button></div>
   <div class="dash-section">
     <h3>Registered Customers</h3>
     <button onclick="loadAdminCustomers()">Refresh Customers</button>
     <div id="adminCustomers" class="empty" style="margin-top:12px">Load customers to view list.</div>
   </div>
+  <div class="dash-section">
+   <h3>Publish Professional Precision Report (Admin Override)</h3>
+   <button type="button" class="secondary" onclick="autoFillAdminReport()" style="margin-bottom:14px;background:#192331;color:var(--gold);border:1px solid var(--gold);">✦ Auto-Fill Professional Deep Analysis</button>
+   <form id="adminReportForm">
+    <label>Trading Session Slot *</label>
+    <select id="adminReportSlot" required style="width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px">
+      <option value="">Select slot</option>
+      <option value="Pre-Market · 8:30 AM">Pre-Market · 8:30 AM</option>
+      <option value="Mid-Session · 12:30 PM">Mid-Session · 12:30 PM</option>
+      <option value="Post-Market · 4:30 PM">Post-Market · 4:30 PM</option>
+    </select>
+    <label>Customer User ID *</label><input id="adminUserId" required placeholder="Supabase Auth user UUID">
+    <label>Report Title *</label><input id="adminReportTitle" required maxlength="160">
+    <label>Nifty & Commodities Summary</label><textarea id="adminSummary" rows="3"></textarea>
+    <label>Vedic Planetary Degrees Analysis</label><textarea id="adminVedic" rows="3"></textarea>
+    <label>KP Sub-Lord House Significations</label><textarea id="adminKp" rows="3"></textarea>
+    <label>Numerology & Timing Windows</label><textarea id="adminNumerology" rows="3"></textarea>
+    <label>Sector & Commodity Kharidari / Bikwali Matrix</label><textarea id="adminSector" rows="4"></textarea>
+    <label>High-Conviction Stock & Commodity Setup</label><textarea id="adminStock" rows="3"></textarea>
+    <label>Institutional Market Outlook</label><textarea id="adminOutlook" rows="3"></textarea>
+    <br><button id="publishReportBtn" type="submit">Publish Admin Report</button>
+   </form><div id="adminMsg" class="status"></div>
+  </div>
  </div>
 </section>
 </main>
-<footer>© ASTRO TRADE PRO · Ultra-Precision Financial Engine</footer>
+<footer>© ASTRO TRADE PRO · Nifty & Commodities Precision Engine</footer>
 <script>
 const SUPABASE_URL = "https://ahrnjncdcsdmguhvhlfj.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ktg8SZPkNqOWie8OK2rtIQ_YBM22F9a";
@@ -135,11 +158,10 @@ document.getElementById('loginForm').addEventListener('submit',async e=>{
  finally{btn.disabled=false;}
 });
 
-// ULTRA-DETAILED SPECIFIC FINANCIAL ENGINE
+// ULTRA-DETAILED SPECIFIC ENGINE WITH GOLD, SILVER & CRUDE OIL
 function generateSpecificAstroContent(mode) {
   const now = new Date();
   const dateStr = now.toLocaleDateString('hi-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  const timeStr = now.toLocaleTimeString('hi-IN');
   const dayIndex = now.getDate() % 5;
 
   const sectorRotations = [
@@ -158,37 +180,37 @@ function generateSpecificAstroContent(mode) {
   let sectorText = '';
 
   if (mode.includes('Pre-Market')) {
-    niftyText = `NIFTY 50 PRE-MARKET OPENING DIRECTION & LEVEL SETUP (8:30 AM):\n• Opening Bias & Trend: Sun aur Jupiter ke exact trine aspect ke karan market mein strong gap-up ya bullish opening ka yog hai.\n• Critical Support & Resistance: Nifty ke liye immediate support 24,150 - 24,200 zone par hai, jabki resistance 24,450 - 24,500 par sthit hai.\n• Actionable Strategy: Agar market opening ke baad dip deta hai, toh long positions banayein. Stop-loss strict rakhein.`;
-    vedicText = `VEDIC PLANETARY DEGREE ANALYSIS (PRE-MARKET):\n• Sun is positioned at 14° in fiery sign, activating financial wealth houses.\n• Mars trine Saturn energy creates high volume in heavyweights during opening bell.`;
-    kpText = `KP ASTROLOGY SUB-LORD SIGNIFICATORS (OPENING):\n• 2nd House Cuspal Sub-Lord is strongly linked with 11th House (Gains), confirming positive opening momentum.\n• 12th House negative significators are weak at open, avoiding early trap sells.`;
-    sectorText = `10-SECTOR PRE-MARKET KHARIDARI / BIKWALI MATRIX:\n\n🟢 1. KHARIDARI (STRONG BUY / TEZI):\n• ${current.buy[0]}: Open se hi institutional buying active rahegi.\n• ${current.buy[1]}: Strong stellar support, bullish momentum expected.\n\n🔴 2. BIKWALI (SELLING PRESSURE / MANDI):\n• ${current.sell[0]}: Opening bounce par profit booking aur sell-on-rise strategy rakhein.`;
+    niftyText = `NIFTY 50 & COMMODITIES PRE-MARKET DIRECTION (8:30 AM):\n• Nifty 50: Opening bias positive. Support: 24,150, Resistance: 24,450.\n• Gold & Silver (Bullion): Sun & Venus conjunction indicates safe-haven demand; dip par Kharidari (Tezi) rahegi.\n• Crude Oil: Mars & Saturn aspect creates high-beta volatility; range-bound to sell on rise (Bikwali).`;
+    vedicText = `VEDIC PLANETARY DEGREE ANALYSIS:\n• Sun in fiery sign activates bullion strength.\n• Mars energy triggers crude oil swing movements.`;
+    kpText = `KP SUB-LORD SIGNIFICATORS:\n• 2nd/11th houses active for Nifty & Gold gains.\n• 8th house affliction active for Crude Oil downside pressure.`;
+    sectorText = `KHARIDARI & BIKWALI MATRIX (SECTORS & COMMODITIES):\n\n🟢 KHARIDARI (TEZI / BUY):\n• ${current.buy[0]}, ${current.buy[1]}\n• Gold & Silver: Shandar tezi aur dip par accumulation.\n\n🔴 BIKWALI (MANDI / SELL):\n• ${current.sell[0]}\n• Crude Oil: Uchai par profit booking aur bikwali.`;
   } else if (mode.includes('Mid-Session')) {
-    niftyText = `NIFTY 50 MID-SESSION INTRADAY REVERSAL & TRAP ZONE (12:30 PM):\n• Intraday Trend Shift: Lunar nakshatra transition ke chalte dopahar mein Nifty ek narrow range mein consolidate karega ya false breakout trap banayega.\n• Critical Support & Resistance: Support test ho sakta hai 24,100 par; upside barrier 24,350 par locked hai.\n• Actionable Strategy: Mid-day ke dauran over-leveraged long ya short positions se bachein. Mean-reversion trades par dhyan dein.`;
-    vedicText = `VEDIC PLANETARY DEGREE ANALYSIS (MID-DAY):\n• Moon meridian crossing creates volatility spike and emotional trading swings.\n• Mercury soft aspect indicates sideways digestion of morning moves.`;
-    kpText = `KP ASTROLOGY SUB-LORD SIGNIFICATORS (INTRADAY):\n• 6th and 8th House sub-lords get activated, pointing towards intraday whipsaws and profit booking.\n• Avoid fresh aggressive breakouts during 12:00 PM to 01:30 PM window.`;
-    sectorText = `10-SECTOR MID-SESSION KHARIDARI / BIKWALI MATRIX:\n\n🟢 1. KHARIDARI (DEFENSIVE SUPPORT):\n• ${current.neutral[0]}: Dip par safe accumulation.\n\n🔴 2. BIKWALI / PROFIT BOOKING:\n• ${current.buy[0]}: Morning gain ke baad mid-day correction aur selling pressure.`;
+    niftyText = `NIFTY 50 & COMMODITIES MID-SESSION (12:30 PM):\n• Nifty 50: Range-bound consolidation and mid-day trap zone near 24,250.\n• Gold & Silver: Intraday profit booking after morning highs.\n• Crude Oil: Sharp reversal window and inventory-linked volatility spike.`;
+    vedicText = `VEDIC MID-DAY SHIFT:\n• Moon meridian crossing induces intraday swings across bullion and energy.`;
+    kpText = `KP INTRADAY NADI:\n• 6th/8th house activation points to choppy movement in Crude and Nifty.`;
+    sectorText = `MID-SESSION MATRIX:\n\n🟢 KHARIDARI (DEFENSIVE):\n• ${current.neutral[0]}\n• Gold: Safe-haven holding.\n\n🔴 BIKWALI / PROFIT BOOKING:\n• Crude Oil & ${current.buy[0]}: Intraday profit booking.`;
   } else if (mode.includes('Post-Market')) {
-    niftyText = `NIFTY 50 POST-MARKET CLOSING & NEXT-DAY CARRY-FORWARD SETUP (4:30 PM):\n• Closing Analysis: Din bhar ke planetary transits ke aadhar par Nifty day range ke upper/lower band par settle ho raha hai.\n• Rollover & Next Session Bias: Overnight position ke liye institutional accumulation strong hai.\n• Actionable Strategy: Closing settlement ke mutabiq next day ke liye positional positional swing trades plan karein.`;
-    vedicText = `VEDIC PLANETARY DEGREE ANALYSIS (CLOSING):\n• Sunset chart alignment shows stabilization in institutional portfolios and value buying at close.`;
-    kpText = `KP ASTROLOGY SUB-LORD SIGNIFICATORS (CLOSING):\n• 4th and 11th House sub-lords dominate the closing cusp, confirming positive carry-forward sentiment for next session.`;
-    sectorText = `10-SECTOR POST-MARKET KHARIDARI / BIKWALI MATRIX:\n\n🟢 1. STRONG ACCUMULATION (KHARIDARI):\n• ${current.buy[0]} & ${current.buy[1]}: Heavy institutional buying near closing bell.\n\n🔴 2. SUSTAINED WEAKNESS (BIKWALI):\n• ${current.sell[0]}: Closed under continuous selling pressure.`;
+    niftyText = `NIFTY 50 & COMMODITIES POST-MARKET (4:30 PM):\n• Nifty 50: Closing settlement and institutional rollover analysis.\n• Gold & Silver: Evening session carry-forward momentum review.\n• Crude Oil: Nodal settlement and global closing trend setup.`;
+    vedicText = `VEDIC CLOSING ALIGNMENT:\n• Sunset chart shows institutional portfolio stabilization in Nifty and Bullion.`;
+    kpText = `KP CLOSING SIGNIFICTORS:\n• 4th/11th cusps support positive carry-forward for Gold and Nifty.`;
+    sectorText = `POST-MARKET MATRIX:\n\n🟢 STRONG ACCUMULATION:\n• ${current.buy[0]}, Gold & Silver\n\n🔴 SUSTAINED WEAKNESS:\n• Crude Oil & ${current.sell[0]}`;
   } else {
-    niftyText = `NIFTY 50 FULL DAY MACRO & WEEKLY ASTROLOGICAL HORIZON:\n• Comprehensive multi-session trend breakdown covering open, high, low, close, and nodal shifts (Rahu-Ketu axis).\n• Structural support and resistance zones mapped for institutional positional trading.`;
-    vedicText = `VEDIC MACRO SYNERGY:\n• Major planetary alignments supporting sustainable index expansion and strong downside defense.`;
-    kpText = `KP MACRO NADI SIGNIFICATORS:\n• Stellar pathways indicating steady multi-day trend continuation.`;
-    sectorText = `10-SECTOR MACRO MATRIX:\n- Bullish Sectors (Kharidari): ${current.buy.join(', ')}\n- Bearish Sectors (Bikwali): ${current.sell.join(', ')}`;
+    niftyText = `COMPREHENSIVE MACRO OVERVIEW (NIFTY & COMMODITIES):\n• Multi-session trend mapping for Nifty 50, Gold, Silver, and Crude Oil covering weekly nodal shifts.`;
+    vedicText = `VEDIC MACRO SYNERGY:\n• Long-term planetary cycle supporting bullion and core equity stability.`;
+    kpText = `KP MACRO NADI:\n• Broad stellar pathways for commodity and index trends.`;
+    sectorText = `MACRO MATRIX:\n- Bullish: ${current.buy.join(', ')} & Gold/Silver\n- Bearish: ${current.sell.join(', ')} & Crude Oil`;
   }
 
   return {
-    report_title: `${titlePrefix} Detailed Nifty 50 & Sector Kharidari/Bikwali Matrix`,
+    report_title: `${titlePrefix} Nifty, Gold, Silver, Crude & Sectors Matrix`,
     customer_summary: niftyText,
     vedic_analysis: vedicText,
     kp_analysis: kpText,
-    numerology_analysis: `NUMEROLOGICAL FREQUENCY & TIMING:\n• Root Number: ${(now.getDate() % 9) + 1}\n• High-Probability Trading Windows: 09:30 AM - 11:00 AM & 01:30 PM - 03:00 PM`,
+    numerology_analysis: `NUMEROLOGICAL FREQUENCY & TIMING:\n• Root Number: ${(now.getDate() % 9) + 1}\n• Best Trading Windows: 09:30 AM - 11:00 AM & 06:00 PM - 08:00 PM (Commodities)`,
     sector_analysis: sectorText,
-    stock_analysis: `HIGH-CONVICTION SETUP:\n• Long Focus: ${current.buy[0]} & ${current.buy[1]}\n• Short/Avoid Focus: ${current.sell[0]} on rallies`,
-    market_outlook: `INSTITUTIONAL OUTLOOK:\nStrict compliance with KP house significators is mandatory to avoid market traps.`,
-    trading_timing: `CRITICAL TIMING:\n• Opening Bell (09:15), Mid-Day Reversal (12:30), Closing Block (02:45)`,
+    stock_analysis: `HIGH-CONVICTION SETUP:\n• Equity Long: ${current.buy[0]}\n• Commodity Long: Gold & Silver\n• Commodity Short: Crude Oil on rallies`,
+    market_outlook: `INSTITUTIONAL OUTLOOK:\nStrict adherence to KP house significators for index and commodities.`,
+    trading_timing: `CRITICAL TIMING:\n• Opening (09:15), Mid-Day (12:30), Evening Bullion/Crude Session (05:00 PM)`,
     is_published: true
   };
 }
@@ -196,7 +218,7 @@ function generateSpecificAstroContent(mode) {
 async function generateSpecificReport(){
  const btn=document.getElementById('generateReportBtn');
  const mode=document.getElementById('genMode').value;
- btn.disabled=true;btn.textContent='Calculating Detailed Planetary & Nifty Data...';
+ btn.disabled=true;btn.textContent='Calculating Nifty & Commodities Data...';
  try{
   const {data:{user},error:userError}=await db.auth.getUser();
   if(userError||!user) throw new Error('Pehle login karein.');
@@ -207,10 +229,23 @@ async function generateSpecificReport(){
   const {error}=await db.from('reports').insert(reportData);
   if(error) throw error;
   
-  message('generateReportMsg','Detailed precision report successfully generated!','ok');
+  message('generateReportMsg','Detailed Nifty & Commodities report successfully generated!','ok');
   await loadDashboard(user);
  }catch(err){message('generateReportMsg','Generation failed: '+(err.message||err),'error');}
  finally{btn.disabled=false;btn.textContent='Generate Detailed Precision Report Now';}
+}
+
+function autoFillAdminReport(){
+ document.getElementById('adminReportSlot').value = 'Pre-Market · 8:30 AM';
+ document.getElementById('adminReportTitle').value = '[Pre-Market · 8:30 AM] Nifty, Gold, Silver, Crude & Sectors Matrix';
+ document.getElementById('adminSummary').value = 'NIFTY & COMMODITIES PRE-MARKET:\n• Nifty & Gold: Kharidari (Tezi)\n• Crude Oil: Bikwali (Mandi)';
+ document.getElementById('adminVedic').value = 'VEDIC DEGREE ANALYSIS: Sun in fiery sign activating bullion strength.';
+ document.getElementById('adminKp').value = 'KP SUB-LORD: 2nd/11th houses active for Nifty & Gold gains.';
+ document.getElementById('adminNumerology').value = 'NUMEROLOGY: Root number active. Best window: 09:30 AM - 11:00 AM.';
+ document.getElementById('adminSector').value = 'MATRIX:\n🟢 Kharidari: Banking, Auto, Gold, Silver\n🔴 Bikwali: Crude Oil, Metals';
+ document.getElementById('adminStock').value = 'SETUP: Focus long on Gold, Silver & Banking leaders.';
+ document.getElementById('adminOutlook').value = 'OUTLOOK: Strict adherence to KP house significators required.';
+ alert('Admin form auto-filled successfully!');
 }
 
 async function loadDashboard(user){
@@ -227,7 +262,7 @@ async function loadDashboard(user){
   const box=document.createElement('div');box.className='report';
   const title=document.createElement('h3');
   title.textContent=r.report_title||'Precision Report';box.appendChild(title);
-  const fields=[['Nifty Session Analysis',r.customer_summary],['Vedic Planetary Degrees',r.vedic_analysis],['KP Sub-Lord Significations',r.kp_analysis],['Numerology & Timing',r.numerology_analysis],['Sector Kharidari/Bikwali Matrix',r.sector_analysis],['Stock Setup',r.stock_analysis],['Market Outlook',r.market_outlook],['Timing Windows',r.trading_timing]];
+  const fields=[['Nifty & Commodities Analysis',r.customer_summary],['Vedic Planetary Degrees',r.vedic_analysis],['KP Sub-Lord Significations',r.kp_analysis],['Numerology & Timing',r.numerology_analysis],['Sector & Commodity Matrix',r.sector_analysis],['Stock & Commodity Setup',r.stock_analysis],['Market Outlook',r.market_outlook],['Timing Windows',r.trading_timing]];
   fields.forEach(([label,value])=>{if(value){const h=document.createElement('b');h.textContent=label;const p=document.createElement('p');p.textContent=value;box.append(h,p);}});
   area.appendChild(box);
  });
@@ -241,6 +276,7 @@ async function openAdmin(){
  showSection('admin');
  await loadAdminCustomers();
 }
+
 async function loadAdminCustomers(){
  const area=document.getElementById('adminCustomers');
  area.textContent='Loading customers...';
@@ -255,10 +291,40 @@ async function loadAdminCustomers(){
    const detail=document.createElement('p');detail.textContent=`Email: ${p.email||'—'} | Mobile: ${p.phone||'—'}`;
    row.appendChild(detail);
    const id=document.createElement('small');id.textContent='User ID: '+p.id;row.appendChild(id);
+   const choose=document.createElement('button');choose.textContent='Use this customer ID';choose.style.marginTop='10px';
+   choose.onclick=()=>{document.getElementById('adminUserId').value=p.id;document.getElementById('adminReportTitle').focus();};
+   row.appendChild(choose);
    area.appendChild(row);
   });
  }catch(err){area.textContent='Customer load failed: '+(err.message||err);}
 }
+
+document.getElementById('adminReportForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const btn=document.getElementById('publishReportBtn');btn.disabled=true;
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError) throw userError;
+  if(!isAdminUser(user)) throw new Error('Admin permission required.');
+  const report={
+   user_id:document.getElementById('adminUserId').value.trim(),
+   report_title:'['+document.getElementById('adminReportSlot').value+'] ' + document.getElementById('adminReportTitle').value.trim(),
+   customer_summary:document.getElementById('adminSummary').value.trim(),
+   vedic_analysis:document.getElementById('adminVedic').value.trim(),
+   kp_analysis:document.getElementById('adminKp').value.trim(),
+   numerology_analysis:document.getElementById('adminNumerology').value.trim(),
+   sector_analysis:document.getElementById('adminSector').value.trim(),
+   stock_analysis:document.getElementById('adminStock').value.trim(),
+   market_outlook:document.getElementById('adminOutlook').value.trim(),
+   is_published:true
+  };
+  const {error}=await db.from('reports').insert(report);
+  if(error) throw error;
+  alert('Admin report successfully published!');
+  e.target.reset();
+ }catch(err){alert('Publish failed: '+(err.message||err));}
+ finally{btn.disabled=false;}
+});
 
 async function logout(){ await db.auth.signOut(); showSection('home'); }
 
