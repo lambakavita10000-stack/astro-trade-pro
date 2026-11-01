@@ -162,7 +162,7 @@ async function ensureCustomerRows(user, metadata){
 }
 document.getElementById('registerForm').addEventListener('submit',async e=>{
  e.preventDefault();const btn=document.getElementById('registerBtn');btn.disabled=true;
- const details={full_name:document.getElementById('regName').value.trim(),phone:document.getElementById('regPhone').value.trim(),email:document.getElementById('regEmail').value.trim(),birth:{birth_date:document.getElementById('regDob').value,birth_time:document.getElementById('regTob').value,birth_place:document.getElementById('regPlace'].value.trim()}};
+ const details={full_name:document.getElementById('regName').value.trim(),phone:document.getElementById('regPhone').value.trim(),email:document.getElementById('regEmail').value.trim(),birth:{birth_date:document.getElementById('regDob').value,birth_time:document.getElementById('regTob').value,birth_place:document.getElementById('regPlace').value.trim()}};
  try{
   const {data,error}=await db.auth.signUp({email:details.email,password:document.getElementById('regPassword').value,options:{data:{full_name:details.full_name,phone:details.phone,birth:details.birth}}});
   if(error) throw error;
@@ -183,7 +183,6 @@ document.getElementById('loginForm').addEventListener('submit',async e=>{
  finally{btn.disabled=false;}
 });
 
-// Client-side automated report generator fallback
 async function generateMyReport(){
  const btn=document.getElementById('generateReportBtn');
  btn.disabled=true;btn.textContent='Report ban rahi hai...';
@@ -214,7 +213,6 @@ async function generateMyReport(){
  finally{btn.disabled=false;btn.textContent='Generate Report Now';}
 }
 
-// Auto-fill helper for Admin Panel
 function autoFillAdminReport(){
  document.getElementById('adminReportSlot').value = 'Pre-Market · 8:30 AM';
  document.getElementById('adminReportCategory').value = 'Sector-Wise Analysis';
@@ -282,6 +280,7 @@ async function loadAdminCustomers(){
   });
  }catch(err){area.textContent='Customer list load nahi hui: '+(err.message||err);}
 }
+
 document.getElementById('adminReportForm').addEventListener('submit',async e=>{
  e.preventDefault();
  const btn=document.getElementById('publishReportBtn');btn.disabled=true;
@@ -316,6 +315,19 @@ async function logout(){
   await db.auth.signOut();
   showSection('home');
 }
+
+// Automatic session recovery on page load so refresh never breaks anything
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (session?.user) {
+      await ensureCustomerRows(session.user, {});
+      await syncAdminVisibility(session.user);
+    }
+  } catch (err) {
+    console.error("Session recovery error:", err);
+  }
+});
 </script>
 </body>
 </html>
