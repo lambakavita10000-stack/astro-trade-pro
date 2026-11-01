@@ -1,1 +1,206 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASTRO TRADE PRO</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#080a10;--panel:#111722;--gold:#d8ad55;--text:#f5f0e5;--muted:#a8b0bd;--line:#293344;--green:#4ed49a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#18202c 0,#080a10 48%);color:var(--text);font-family:Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:17px 6%;border-bottom:1px solid var(--line);position:sticky;top:0;background:#080a10ed;z-index:3}
+.brand{font-weight:800;letter-spacing:1.5px;color:var(--gold)}nav{display:flex;gap:8px;flex-wrap:wrap}button,.btn{background:var(--gold);color:#17130a;border:0;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer}button.secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}button:disabled{opacity:.5;cursor:wait}
+main{max-width:1100px;margin:auto;padding:34px 18px 70px}.hero{text-align:center;padding:48px 10px 38px}.eyebrow{color:var(--gold);letter-spacing:3px;font-size:12px}.hero h1{font-size:clamp(34px,7vw,60px);margin:13px 0;color:var(--gold)}h2,h3{color:var(--gold)}.hero p{color:var(--muted);line-height:1.7;max-width:700px;margin:15px auto}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin:26px 0}.card,.box,.dash-card{background:linear-gradient(145deg,#151e2b,#0e131c);border:1px solid var(--line);border-radius:14px;padding:22px}.card h3{margin-top:0}.muted{color:var(--muted);line-height:1.6}.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.panel{display:none;max-width:100%;margin:22px auto}.panel.active{display:block}.box h2{margin-top:0}label{display:block;color:#d9dce2;font-size:14px;margin:13px 0 6px}input,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px}input[type=checkbox]{width:auto}small{color:var(--muted)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.wide{grid-column:1/-1}.notice{padding:12px;border-radius:8px;background:#192331;color:#cbd4df;font-size:13px;line-height:1.5;margin:14px 0}.status{margin:12px 0;padding:12px;border-radius:8px;display:none;line-height:1.5}.status.show{display:block}.status.error{background:#421f25;color:#ffd5d8}.status.ok{background:#123629;color:#c6ffe6}.report{border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0;background:#0b111a}.report h3{margin-top:0}.report p{white-space:pre-wrap;color:#d8dce4;line-height:1.6}.hidden{display:none!important}footer{text-align:center;color:#788392;border-top:1px solid var(--line);padding:22px;font-size:13px}
+.dashboard-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}.dash-card{min-height:130px}.dash-card .label{color:var(--muted);font-size:13px}.dash-card .value{font-size:22px;font-weight:700;margin-top:12px;color:var(--gold)}.dash-section{margin-top:20px}.dash-section h3{margin-bottom:10px}.pill{display:inline-block;border:1px solid #66532d;color:var(--gold);border-radius:20px;padding:5px 10px;font-size:12px}.empty{padding:14px;border:1px dashed #465268;border-radius:9px;color:var(--muted);line-height:1.6}.premium{border:1px solid #8b6b32;background:linear-gradient(145deg,#211b10,#111722 72%);box-shadow:0 10px 30px #0005}.schedule-time{font-size:22px;color:var(--gold);font-weight:800;margin:8px 0}.tagline{color:#f2d99e;font-size:12px;letter-spacing:1px}.plan-price{font-size:28px;color:var(--gold);font-weight:800;margin:12px 0}
+@media(max-width:560px){header{align-items:flex-start;gap:12px;flex-direction:column}.formgrid{grid-template-columns:1fr}.wide{grid-column:auto}.hero{padding-top:30px}}
+</style>
+</head>
+<body>
+<header><div class="brand">✦ ASTRO TRADE PRO</div><nav>
+<button class="secondary" onclick="showSection('home')">Home</button>
+<button class="secondary" onclick="showSection('register')">Register</button>
+<button class="secondary" onclick="showSection('login')">Login</button>
+<button id="adminNav" class="secondary hidden" onclick="openAdmin()">Admin</button>
+</nav></header>
+<main>
+<section id="home">
+<div class="hero"><div class="eyebrow">VEDIC ASTROLOGY • KP ASTROLOGY • NUMEROLOGY</div>
+<h1>ASTRO TRADE PRO</h1><p>Advanced astrological research and high-precision market cycle studies for NIFTY 50 and 10 major market sectors.</p>
+<div class="actions"><button onclick="showSection('register')">Create Account</button><button class="secondary" onclick="showSection('login')">Customer Login</button></div></div>
+<div class="cards">
+<div class="card"><h3>Vedic Astrology</h3><p class="muted">Deep planetary transit & stellar alignment tracking.</p></div>
+<div class="card"><h3>KP Astrology</h3><p class="muted">Sub-lord & Nakshatra Nadi precise market cycle breakdown.</p></div>
+<div class="card"><h3>Numerology</h3><p class="muted">Lo Shuru & numerical grid vibrations for trading windows.</p></div>
+<div class="card"><h3>Sector-Wise Analysis</h3><p class="muted">Banking, IT, Auto, Pharma, Metals, Energy, FMCG, Realty, Infrastructure & Oil/Gas deep sectoral mapping.</p></div>
+</div>
+<section class="dash-section" aria-label="Premium daily astrology reports">
+<h2 style="text-align:center">✦ ASTRO PREMIUM — 3 DAILY UPDATES</h2>
+<p class="muted" style="text-align:center">Professional Vedic, KP & Numerology institutional-grade analysis format.</p>
+<div class="cards">
+ <div class="card premium"><span class="tagline">PRE-MARKET</span><div class="schedule-time">8:30 AM</div><h3>Opening Outlook</h3><p class="muted">Comprehensive planetary opening cues, lunar nakshatra shifts & sectoral leadership matrix for NIFTY 50.</p></div>
+ <div class="card premium"><span class="tagline">MID-SESSION</span><div class="schedule-time">12:30 PM</div><h3>Intraday Reversal Windows</h3><p class="muted">Mid-day planetary angle shifts and intraday volatility cycle tracking across all 10 key sectors.</p></div>
+ <div class="card premium"><span class="tagline">POST-MARKET</span><div class="schedule-time">4:30 PM</div><h3>Closing Cycle & Next-Day Setup</h3><p class="muted">In-depth review of planetary closing strength and next session directional bias calculation.</p></div>
+</div>
+</section>
+</main>
 
+<section id="register" class="panel"><div class="box"><h2>Create Your Account</h2>
+<form id="registerForm"><div class="formgrid">
+<div class="wide"><label>Full Name *</label><input id="regName" required maxlength="100"></div>
+<div><label>Mobile Number *</label><input id="regPhone" required inputmode="tel" maxlength="20"></div>
+<div><label>Email *</label><input id="regEmail" type="email" required autocomplete="email"></div>
+<div><label>Password *</label><input id="regPassword" type="password" required minlength="8" autocomplete="new-password"></div>
+<div><label>Date of Birth *</label><input id="regDob" type="date" required></div>
+<div><label>Time of Birth *</label><input id="regTob" type="time" required></div>
+<div class="wide"><label>Birth Place *</label><input id="regPlace" required maxlength="150" placeholder="City, State, Country"></div>
+</div><div class="notice"><label><input id="agree" type="checkbox" required> I agree that my details may be used to prepare my requested premium astrology report.</label></div>
+<button id="registerBtn" type="submit">Register</button></form><div id="registerMsg" class="status"></div></div></section>
+
+<section id="login" class="panel"><div class="box"><h2>Customer Login</h2><form id="loginForm">
+<label>Email</label><input id="loginEmail" type="email" required autocomplete="username">
+<label>Password</label><input id="loginPassword" type="password" required autocomplete="current-password">
+<br><br><button id="loginBtn" type="submit">Login</button></form><div id="loginMsg" class="status"></div></div></section>
+
+<section id="dashboard" class="panel">
+<div class="box">
+<div class="dashboard-head"><div><span class="pill">PREMIUM MEMBER AREA</span><h2>Customer Dashboard</h2><p id="welcome" class="muted"></p></div><button class="secondary" onclick="logout()">Logout</button></div>
+<div class="dash-grid">
+ <div class="dash-card"><div class="label">ACCOUNT STATUS</div><div class="value" id="accountStatus">Active</div><small>Secured Session</small></div>
+ <div class="dash-card"><div class="label">SUBSCRIPTION</div><div class="value" id="subscriptionStatus" style="color:var(--green)">Active Premium</div><small>3 Daily Updates Enabled</small></div>
+ <div class="dash-card"><div class="label">PUBLISHED REPORTS</div><div class="value" id="reportCount">0</div><small>Archive accessible</small></div>
+</div>
+<div class="dash-section"><h3>Your Birth Details</h3><div id="birthInfo" class="empty">Loading...</div></div>
+<div class="dash-section"><h3>Instant High-Precision Report Generation</h3><p class="muted">Click below to generate advanced institutional-grade Vedic & KP transit analysis for NIFTY 50 and all 10 sectors instantly.</p><button id="generateReportBtn" onclick="generateMyReport()">Generate Premium Report Now</button><div id="generateReportMsg" class="status"></div></div>
+<div class="dash-section"><h3>Your Published Reports Archive</h3><div id="reportsArea" class="muted">Loading reports...</div></div>
+</div>
+</section>
+
+<section id="admin" class="panel">
+ <div class="box">
+  <div class="dashboard-head"><div><span class="pill">ADMIN COMMAND CENTER</span><h2>Admin Panel</h2><p class="muted">Publish deep professional multi-layered astrological research reports for premium subscribers.</p></div><button class="secondary" onclick="showSection('dashboard')">Back to Dashboard</button></div>
+  <div class="dash-section"><h3>Registered Customers</h3><button id="refreshCustomersBtn" onclick="loadAdminCustomers()">Refresh Customers</button><div id="adminCustomers" class="empty" style="margin-top:12px">Load customers to view the list.</div></div>
+  <div class="dash-section">
+   <h3>Publish Professional Premium Report</h3>
+   <button type="button" class="secondary" onclick="autoFillAdminReport()" style="margin-bottom:14px;background:#192331;color:var(--gold);border:1px solid var(--gold);">✦ Auto-Fill Professional Deep Analysis</button>
+   <form id="adminReportForm">
+    <label>Premium Daily Update Slot *</label>
+    <select id="adminReportSlot" required style="width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px">
+      <option value="">Select daily update</option>
+      <option value="Pre-Market · 8:30 AM">Pre-Market · 8:30 AM</option>
+      <option value="Mid-Session · 12:30 PM">Mid-Session · 12:30 PM</option>
+      <option value="Post-Market · 4:30 PM">Post-Market · 4:30 PM</option>
+    </select>
+    <label>Customer User ID *</label><input id="adminUserId" required placeholder="Supabase Auth user UUID">
+    <label>Report Category *</label>
+    <select id="adminReportCategory" required style="width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px">
+      <option value="">Select category</option>
+      <option value="KP Astrology">KP Astrology</option>
+      <option value="Share Market">Share Market</option>
+      <option value="Sector-Wise Analysis">Sector-Wise Analysis</option>
+      <option value="Vedic Astrology">Vedic Astrology</option>
+      <option value="Numerology">Numerology</option>
+    </select>
+    <label>Sector *</label>
+    <select id="adminSectorName" style="width:100%;padding:12px;border-radius:8px;border:1px solid #344154;background:#080d15;color:white;font-size:16px">
+      <option value="">Select sector</option>
+      <option>Banking &amp; Finance</option><option>IT &amp; Technology</option><option>Auto &amp; Automobile</option>
+      <option>Pharma &amp; Healthcare</option><option>Metal &amp; Mining</option><option>Energy &amp; Power</option>
+      <option>FMCG</option><option>Realty</option><option>Infrastructure</option><option>Oil &amp; Gas</option>
+    </select>
+    <label>Report Title *</label><input id="adminReportTitle" required maxlength="160">
+    <label>Executive Summary / Core Thesis</label><textarea id="adminSummary" rows="3"></textarea>
+    <label>Vedic Planetary & Transit Breakdown</label><textarea id="adminVedic" rows="3"></textarea>
+    <label>KP Astrology Sub-Lord & Nakshatra Nadi Analysis</label><textarea id="adminKp" rows="3"></textarea>
+    <label>Numerology vibrational Frequency & Cycles</label><textarea id="adminNumerology" rows="3"></textarea>
+    <label>Sector-Wise Astrological Trend (Tezi/Mandi/Consolidation)</label><textarea id="adminSector" rows="5"></textarea>
+    <label>High-Probability Index & Stock Setup</label><textarea id="adminStock" rows="3"></textarea>
+    <label>Institutional Market Outlook</label><textarea id="adminOutlook" rows="3"></textarea>
+    <label>Critical Astro-Timing Windows (Muhurat)</label><textarea id="adminTiming" rows="3"></textarea>
+    <br><button id="publishReportBtn" type="submit">Publish Professional Report</button>
+   </form><div id="adminMsg" class="status"></div>
+  </div>
+ </div>
+</section>
+</main>
+<footer>© ASTRO TRADE PRO · Institutional-Grade Astrological Research</footer>
+<script>
+const SUPABASE_URL = "https://ahrnjncdcsdmguhvhlfj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ktg8SZPkNqOWie8OK2rtIQ_YBM22F9a";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+function showSection(id){
+ document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
+ if(id==='home'){document.getElementById('home').classList.remove('hidden');window.scrollTo(0,0);return;}
+ document.getElementById('home').classList.add('hidden');
+ document.getElementById(id).classList.add('active');window.scrollTo(0,0);
+}
+function message(id,text,type='ok'){const el=document.getElementById(id);el.textContent=text;el.className='status show '+type;}
+async function ensureCustomerRows(user, metadata){
+ const {data:profile,error:pErr}=await db.from('profiles').select('id').eq('id',user.id).maybeSingle();
+ if(pErr) throw pErr;
+ if(!profile){
+  await db.from('profiles').insert({id:user.id,full_name:metadata.full_name||user.user_metadata?.full_name||'',phone:metadata.phone||user.user_metadata?.phone||'',email:user.email||''});
+ }
+ const {data:birth,error:bErr}=await db.from('birth_profiles').select('id').eq('user_id',user.id).maybeSingle();
+ if(bErr) throw bErr;
+ const b=metadata.birth||user.user_metadata?.birth;
+ if(!birth && b){
+  await db.from('birth_profiles').insert({user_id:user.id,birth_date:b.birth_date,birth_time:b.birth_time,birth_place:b.birth_place});
+ }
+}
+document.getElementById('registerForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=document.getElementById('registerBtn');btn.disabled=true;
+ const details={full_name:document.getElementById('regName').value.trim(),phone:document.getElementById('regPhone').value.trim(),email:document.getElementById('regEmail').value.trim(),birth:{birth_date:document.getElementById('regDob').value,birth_time:document.getElementById('regTob').value,birth_place:document.getElementById('regPlace').value.trim()}};
+ try{
+  const {data,error}=await db.auth.signUp({email:details.email,password:document.getElementById('regPassword').value,options:{data:{full_name:details.full_name,phone:details.phone,birth:details.birth}}});
+  if(error) throw error;
+  if(data.user && data.session){await ensureCustomerRows(data.user,details);message('registerMsg','Registration successful! Aap login kar sakte hain.','ok');}
+  else{message('registerMsg','Account created. Email verification link check karein, fir login karein.','ok');}
+  e.target.reset();
+ }catch(err){message('registerMsg',err.message||'Registration failed.','error');}
+ finally{btn.disabled=false;}
+});
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=document.getElementById('loginBtn');btn.disabled=true;
+ try{
+  const {data,error}=await db.auth.signInWithPassword({email:document.getElementById('loginEmail').value.trim(),password:document.getElementById('loginPassword').value});
+  if(error) throw error;
+  await ensureCustomerRows(data.user,{});
+  await loadDashboard(data.user);await syncAdminVisibility(data.user);showSection('dashboard');
+ }catch(err){message('loginMsg',err.message||'Login failed.','error');}
+ finally{btn.disabled=false;}
+});
+
+async function generateMyReport(){
+ const btn=document.getElementById('generateReportBtn');
+ btn.disabled=true;btn.textContent='Generating Institutional Report...';
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError||!user) throw new Error('Pehle login karein.');
+  
+  const reportData = {
+   user_id: user.id,
+   report_title: '[Pre-Market · 8:30 AM] [Institutional Sector-Wise Matrix] NIFTY 50 & 10 Sectors Deep Astro-Cycle Outlook',
+   customer_summary: 'CORE INSTITUTIONAL THESIS: Current planetary transits indicate a high-energy directional bias. Lunar nakshatra ingress into active fiery constellations points toward aggressive institutional participation in key index heavyweights during the opening bell.',
+   vedic_analysis: 'VEDIC PLANETARY MAPPING: Sun and Mars strong mutual aspect in movable zodiac signs creates high momentum clusters. Rahu-Ketu axis active in financial houses indicates sudden volatility spikes followed by steady trend sustenance in core sectors.',
+   kp_analysis: 'KP ASTROLOGY SUB-LORD DYNAMICS: Significators of 2nd, 6th, and 10th houses are strongly activated by Moon sub-period lord. Nakshatra Nadi transit confirms directional breakout potential above crucial pivot thresholds for NIFTY 50.',
+   numerology_analysis: 'NUMEROLOGICAL FREQUENCY: Root compound number alignment for the trading session shows strong structural integrity, favoring calculated breakout strategies over mean-reversion.',
+   sector_analysis: '10-SECTOR DEEP MATRIX:\n1. Banking & Finance: Bullish momentum via Jupiter favorable transit.\n2. IT & Tech: Consolidation phase with selective stock accumulation.\n3. Auto: Strong revival driven by solar planetary strength.\n4. Pharma: Defensive strength with steady upward bias.\n5. Metals: High volatility due to fierce Mars-Rahu interactions.\n6. Energy & Power: Strong institutional buying patterns.\n7. FMCG: Range-bound stable defensive consolidation.\n8. Realty: Breakout momentum supported by land-element lords.\n9. Infrastructure: Capital infusion cycles indicated by Saturn direct transit.\n10. Oil & Gas: Dynamic swing movements tied to planetary nodal shifts.',
+   stock_analysis: 'HIGH-PROBABILITY SECTOR LEADERS: Heavyweight constituents in Banking, Auto, and Energy show synchronized stellar triggers aligning with major institutional accumulation zones.',
+   market_outlook: 'MACRO ASTROLOGICAL OUTLOOK: The overarching planetary cycle signals an impulsive expansion phase for NIFTY 50, with strong support zones protected by benefic stellar aspects.',
+   trading_timing: 'CRITICAL TIMING WINDOWS (MUHURAT):\n• 09:15 AM - 10:00 AM: Opening volatility & primary directional establishment.\n• 12:30 PM - 01:30 PM: Mid-session institutional trend confirmation window.\n• 02:45 PM - 03:30 PM: Closing block positioning and settlement cycle.',
+   is_published: true
+  };
+
+  const {error}=await db.from('reports').insert(reportData);
+  if(error) throw error;
+  
+  message('generateReportMsg','Institutional report successfully generated and added to your archive!','ok');
+  await loadDashboard(user);
+ }catch(err){message('generateReportMsg','Generation failed: '+(err.message||err),'error');}
+ finally{btn.disabled=false;btn.textContent='Generate Premium Report Now';}
+}
+
+function autoFillAdminReport(){
+ document.getElementById('adminReportSlot').value = 'Pre-
