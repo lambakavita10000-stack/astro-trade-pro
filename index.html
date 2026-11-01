@@ -177,7 +177,7 @@ async function ensureCustomerRows(user, metadata){
 
 document.getElementById('registerForm').addEventListener('submit',async e=>{
  e.preventDefault();const btn=document.getElementById('registerBtn');btn.disabled=true;
- const details={full_name:document.getElementById('regName').value.trim(),phone:document.getElementById('regPhone').value.trim(),email:document.getElementById('regEmail').value.trim(),birth:{birth_date:document.getElementById('regDob').value,birth_time:document.getElementById('regTob').value,birth_place:document.getElementById('regPlace').value.trim()}};
+ const details={full_name:document.getElementById('regName').value.trim(),phone:document.getElementById('regPhone').value.trim(),email:document.getElementById('regEmail').value.trim(),birth:{birth_date:document.getElementById('regDob').value,birth_time:document.getElementById('regTob').value,birth_place:document.getElementById('regPlace'].value.trim()}};
  try{
   const {data,error}=await db.auth.signUp({email:details.email,password:document.getElementById('regPassword').value,options:{data:{full_name:details.full_name,phone:details.phone,birth:details.birth}}});
   if(error) throw error;
@@ -209,7 +209,7 @@ async function generateAndSnapshotReport() {
 
   const now = new Date();
   const dateStr = now.toISOString().split('T')[0];
-  const reportTitle = `[${mode} Report] Nifty 50 & Sectors Quantitative Analysis`;
+  const reportTitle = `${mode} Report: Nifty 50 & Sectors Quantitative Analysis`;
   const summaryText = `Automated ${mode} research report generated with Vedic degrees, KP sub-lords, and technical indicators.`;
   const vedicTxt = "Sun 14° trine Jupiter, activating wealth houses.";
   const kpTxt = "2nd & 11th cuspal sub-lords strongly favorable.";
@@ -356,7 +356,7 @@ async function loadAdminCustomers(){
  const area=document.getElementById('adminCustomers');
  area.textContent='Loading customers...';
  try{
-  const {data:profiles,error}=await db.from('profiles').select('id,full_name,phone,email').order('full_name');
+  const {data:profiles,error}=await db.profiles.select('id,full_name,phone,email').order('full_name');
   if(error) throw error;
   if(!profiles?.length){area.textContent='No customers found.';return;}
   area.innerHTML='';
@@ -376,7 +376,7 @@ async function loadAdminCustomers(){
 
 function autoFillAdminReport(){
  document.getElementById('adminReportSlot').value = 'Morning';
- document.getElementById('adminReportTitle').value = '[Morning Report] Nifty 50 Institutional Backtest Snapshot';
+ document.getElementById('adminReportTitle').value = 'Nifty 50 Institutional Backtest Snapshot';
  document.getElementById('adminInstrument').value = 'Nifty 50';
  document.getElementById('adminDirection').value = 'Bullish';
  document.getElementById('adminConfidence').value = '82';
@@ -395,9 +395,10 @@ document.getElementById('adminReportForm').addEventListener('submit',async e=>{
   if(!isAdminUser(user)) throw new Error('Admin permission required.');
   
   const now = new Date();
+  const slot = document.getElementById('adminReportSlot').value;
   const report={
    user_id:document.getElementById('adminUserId').value.trim(),
-   report_title:'['+document.getElementById('adminReportSlot').value+' Report] ' + document.getElementById('adminReportTitle').value.trim(),
+   report_title:`${slot} Report: ` + document.getElementById('adminReportTitle').value.trim(),
    customer_summary:document.getElementById('adminSummary').value.trim(),
    vedic_analysis:document.getElementById('adminVedic').value.trim(),
    kp_analysis:document.getElementById('adminVedic').value.trim(),
@@ -415,7 +416,7 @@ document.getElementById('adminReportForm').addEventListener('submit',async e=>{
    user_id: document.getElementById('adminUserId').value.trim(),
    report_date: now.toISOString().split('T')[0],
    report_timestamp: now.toISOString(),
-   report_type: document.getElementById('adminReportSlot').value,
+   report_type: slot,
    instrument: document.getElementById('adminInstrument').value,
    predicted_direction: document.getElementById('adminDirection').value,
    confidence_score: parseFloat(document.getElementById('adminConfidence').value),
