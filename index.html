@@ -45,7 +45,6 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
 </header>
 
 <main>
-  <!-- HOME -->
   <section id="home" class="panel active">
     <div class="hero">
       <div style="color:var(--gold);letter-spacing:2px;font-size:12px">INSTITUTIONAL QUANTITATIVE INTELLIGENCE</div>
@@ -58,7 +57,6 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
     </div>
   </section>
 
-  <!-- LOGIN -->
   <section id="login" class="panel">
     <div class="box" style="max-width:450px;margin:40px auto">
       <h2>Customer Login</h2>
@@ -71,7 +69,6 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
     </div>
   </section>
 
-  <!-- TERMINAL -->
   <section id="terminal" class="panel">
     <div class="box">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
@@ -107,7 +104,6 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
     </div>
   </section>
 
-  <!-- SECTORS -->
   <section id="sectors" class="panel">
     <div class="box">
       <h2>Sector Intelligence Matrix</h2>
@@ -121,7 +117,6 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
     </div>
   </section>
 
-  <!-- BACKTEST HUB -->
   <section id="backtest" class="panel">
     <div class="box" style="border-color:var(--gold)">
       <h2>Historical Replay & Out-of-Sample Audit Hub</h2>
@@ -157,7 +152,6 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
     </div>
   </section>
 
-  <!-- ADMIN -->
   <section id="admin" class="panel">
     <div class="box">
       <h2>Admin Command Center</h2>
@@ -165,7 +159,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
       <form id="adminForm" style="margin-top:15px">
         <label>Session Slot</label>
         <select id="admSlot" required><option value="Morning">Morning</option><option value="Afternoon">Afternoon</option><option value="Evening">Evening</option></select>
-        <label>Target User UUID (Auto-Filled)</label><input id="admUser" required readonly placeholder="Auto-populated from session">
+        <label>Target User UUID (Auto-Filled)</label><input id="admUser" required readonly placeholder="Auto-populated">
         <label>Instrument</label><input id="admInst" required value="Nifty 50">
         <label>Report Title</label><input id="admTitle" required value="Institutional Briefing">
         <label>Direction</label><select id="admDir"><option value="Bullish">Bullish</option><option value="Bearish">Bearish</option><option value="Sideways">Sideways</option></select>
@@ -329,13 +323,13 @@ document.getElementById('adminForm').addEventListener('submit', async e=>{
     });
     alert('Master report published & audited successfully!');
     e.target.reset();
-    document.getElementById('admUser').value = uid; // Keep UUID auto-filled
+    document.getElementById('admUser').value = uid;
   }catch(err){ alert('Failed: '+err.message); }
 });
 
 async function checkAuthAndLoad(user){
   document.getElementById('userWelcome').textContent = `Connected: ${user.email}`;
-  document.getElementById('admUser').value = user.id; // Auto-fill UUID here
+  document.getElementById('admUser').value = user.id;
   document.getElementById('adminNav').classList.toggle('hidden', false);
   loadReports(user.id);
 }
