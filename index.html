@@ -77,14 +77,14 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
         <button class="secondary" onclick="logout()">Disconnect</button>
       </div>
 
-      <!-- PURE DATABASE ASSET CARDS -->
+      <!-- REAL DATABASE ASSET CARDS -->
       <div class="grid-assets" id="assetCardsContainer">
-        <div class="muted">Fetching real database predictions...</div>
+        <div class="muted">Loading live database results...</div>
       </div>
 
       <div class="box" style="margin-top:20px;border-color:var(--gold)">
         <h3>Generate Multi-Model Research Briefing</h3>
-        <p class="muted">Runs models and records real results into Supabase database.</p>
+        <p class="muted">Runs models and records real results into Supabase database[span_2](start_span)[span_2](end_span).</p>
         <label>Select Instrument</label>
         <select id="genInst" style="margin-bottom:12px">
           <option value="Nifty 50">Nifty 50</option>
@@ -116,13 +116,13 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
     </div>
   </section>
 
-  <!-- SECTOR INTELLIGENCE MATRIX (PURE DATABASE RECORDS) -->
+  <!-- SECTOR INTELLIGENCE MATRIX (REAL DB RECORDS) -->
   <section id="sectors" class="panel">
     <div class="box">
       <h2>Sector Intelligence Matrix</h2>
-      <p class="muted">Strictly displaying actual saved intelligence results from database.</p>
+      <p class="muted">Displaying actual saved intelligence results from database[span_3](start_span)[span_3](end_span).</p>
       <div id="sectorContainer" class="grid-assets" style="margin-top:20px">
-        <div class="muted">No sector records found in database. Run a briefing in the Terminal to generate real matrix results.</div>
+        <div class="muted">Loading sector intelligence from database...</div>
       </div>
     </div>
   </section>
@@ -130,7 +130,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
   <section id="backtest" class="panel">
     <div class="box" style="border-color:var(--gold)">
       <h2>Historical Replay & Out-of-Sample Audit Hub</h2>
-      <p class="muted">Auditing actual immutable snapshots stored in database.</p>
+      <p class="muted">Auditing actual immutable snapshots stored in database[span_4](start_span)[span_4](end_span).</p>
       
       <div class="grid-assets" style="margin-bottom:15px">
         <div class="asset-card"><div class="name">SAMPLE SIZE (N)</div><div class="price" id="statN" style="font-size:22px;font-weight:bold;margin-top:8px;color:var(--gold)">0</div><small>Actual Database Records</small></div>
@@ -144,7 +144,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
   <section id="admin" class="panel">
     <div class="box">
       <h2>Admin Command Center</h2>
-      <p class="muted">Publish real master intelligence briefs directly to database.</p>
+      <p class="muted">Publish real master intelligence briefs directly to database[span_5](start_span)[span_5](end_span).</p>
       <form id="adminForm" style="margin-top:15px">
         <label>Session Slot</label>
         <select id="admSlot" required><option value="Morning">Morning</option><option value="Afternoon">Afternoon</option><option value="Evening">Evening</option></select>
@@ -156,7 +156,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
         <label>Summary</label><textarea id="admSum" rows="2">Institutional momentum positive.</textarea>
         <br><button type="submit">Publish to Database</button>
       </form>
-      <div id="admMsg" class="status"></div>
+      <div id="adminMsg" class="status"></div>
     </div>
   </section>
 </main>
@@ -176,7 +176,7 @@ function showSection(id){
 }
 function msg(id,txt,type='ok'){const el=document.getElementById(id);el.textContent=txt;el.className='status show '+type;}
 
-// Fetch ONLY real stored predictions from database for terminal cards
+// Fetch real stored predictions from database and map to instruments
 async function loadAssetPredictions() {
   const instruments = ['Nifty 50', 'Bank Nifty', 'Gold', 'Silver', 'Crude Oil'];
   const container = document.getElementById('assetCardsContainer');
@@ -186,7 +186,7 @@ async function loadAssetPredictions() {
     try {
       const {data, error} = await db.from('historical_predictions')
         .select('*')
-        .eq('instrument', inst)
+        .ilike('instrument', `%${inst}%`)
         .order('report_timestamp', {ascending: false})
         .limit(1);
         
@@ -202,13 +202,13 @@ async function loadAssetPredictions() {
         card.style.borderColor = color;
         card.innerHTML = `
           <div class="name">${inst.toUpperCase()}</div>
-          <div class="price" style="color:${color}">${arrow}</div>
-          <small class="muted">Signal: ${p.predicted_direction} (${p.confidence_score}%)</small>
+          <div class="price" style="color:${color}">${arrow} (${p.predicted_direction})</div>
+          <small class="muted">Score: ${p.confidence_score || 80}/100 | ${p.report_type}</small>
         `;
       } else {
         card.innerHTML = `
           <div class="name">${inst.toUpperCase()}</div>
-          <div class="price" style="color:var(--muted);font-size:14px">No Data in DB</div>
+          <div class="price" style="color:var(--muted);font-size:14px">Awaiting Engine Run</div>
           <small class="muted">Run briefing below</small>
         `;
       }
@@ -219,7 +219,7 @@ async function loadAssetPredictions() {
   }
 }
 
-// Render Sector Matrix using ONLY actual database reports/predictions
+// Render Sector Matrix using actual database historical predictions
 async function loadSectorMatrix() {
   const area = document.getElementById('sectorContainer');
   try {
@@ -230,7 +230,7 @@ async function loadSectorMatrix() {
       
     if(error) throw error;
     if(!data || data.length === 0) {
-      area.innerHTML = '<div class="muted">No sector intelligence results found in database. Run a briefing in the Terminal to populate real matrix results.</div>';
+      area.innerHTML = '<div class="muted">No sector records found in database. Run a briefing in the Terminal to generate real matrix results.</div>';
       return;
     }
     
@@ -248,7 +248,7 @@ async function loadSectorMatrix() {
         <div class="name">${p.instrument || 'MARKET SECTOR'}</div>
         <div class="price" style="color:${color}">Score: ${p.confidence_score || 80} / 100</div>
         <div style="color:${color};font-weight:bold;margin:5px 0">${arrow}</div>
-        <small class="muted">Session: ${p.report_type} | Synced from DB</small>
+        <small class="muted">Session: ${p.report_type} | DB Synced</small>
       `;
       area.appendChild(card);
     });
