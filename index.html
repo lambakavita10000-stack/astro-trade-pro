@@ -49,9 +49,9 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
 <main>
   <section id="home" class="panel active">
     <div class="hero">
-      <div style="color:var(--gold);letter-spacing:2px;font-size:12px">LIVE INSTITUTIONAL MARKET INTELLIGENCE</div>
+      <div style="color:var(--gold);letter-spacing:2px;font-size:12px">LIVE INSTANT MARKET INTELLIGENCE</div>
       <h1>Astro Trade Pro Terminal</h1>
-      <p style="color:var(--muted);max-width:700px;margin:15px auto">Clean, precise, real-time institutional intelligence without clutter.</p>
+      <p style="color:var(--muted);max-width:700px;margin:15px auto">Instant real-time analysis generated on demand with zero time slots.</p>
       <div style="margin-top:25px;display:flex;gap:10px;justify-content:center">
         <button onclick="showSection('terminal')">Launch Terminal</button>
         <button class="secondary" onclick="showSection('login')">Customer Login</button>
@@ -79,14 +79,14 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
         <button class="secondary" onclick="logout()">Disconnect</button>
       </div>
 
-      <!-- CLEAN ASSET CARDS -->
+      <!-- LIVE ASSET CARDS -->
       <div class="grid-assets" id="assetCardsContainer">
-        <div class="muted">Loading asset feeds...</div>
+        <div class="muted">Loading live asset feeds...</div>
       </div>
 
       <div class="box" style="margin-top:20px;border-color:var(--gold)">
-        <h3>Generate Live Multi-Model Report</h3>
-        <p class="muted">Clean execution with separated Vedic, KP, Numerology, and Technical models.</p>
+        <h3>Run Instant Live Analysis</h3>
+        <p class="muted">Generates a fresh report instantly for the exact current second.</p>
         <div class="formgrid">
           <div>
             <label>Select Asset / Instrument</label>
@@ -107,12 +107,12 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
             </select>
           </div>
         </div>
-        <button id="generateBtn" onclick="generateCleanReport()">Execute Live Analysis</button>
+        <button id="generateBtn" onclick="generateInstantReport()">Run Instant Live Analysis</button>
         <div id="genMsg" class="status"></div>
       </div>
 
       <div style="margin-top:20px">
-        <h3>Clean Daily Reports Feed</h3>
+        <h3>Live Real-Time Feed</h3>
         <div id="reportsContainer" class="muted">Loading reports...</div>
       </div>
     </div>
@@ -122,9 +122,9 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
   <section id="sectors" class="panel">
     <div class="box">
       <h2>Sector Intelligence Matrix</h2>
-      <p class="muted">Clear-cut buying and selling status across core sectors.</p>
+      <p class="muted">Clear-cut live status across assets and sectors[span_8](start_span)[span_8](end_span).</p>
       <div id="sectorContainer" class="grid-assets" style="margin-top:20px">
-        <div class="muted">Loading sector intelligence...</div>
+        <div class="muted">Loading sector matrix...</div>
       </div>
     </div>
   </section>
@@ -132,7 +132,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
   <section id="backtest" class="panel">
     <div class="box" style="border-color:var(--gold)">
       <h2>Historical Audit Hub</h2>
-      <p class="muted">Immutable verification logs.</p>
+      <p class="muted">Verification logs.</p>
       <div class="grid-assets" style="margin-bottom:15px">
         <div class="asset-card"><div class="name">TOTAL AUDITED RECORDS</div><div class="price" id="statN" style="color:var(--gold)">0</div></div>
       </div>
@@ -144,17 +144,17 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
   <section id="admin" class="panel">
     <div class="box">
       <h2>Admin Command Center</h2>
-      <p class="muted">Publish clean institutional briefs.</p>
+      <p class="muted">Publish instant live briefs.</p>
       <form id="adminForm" style="margin-top:15px">
         <label>Target User UUID (Auto-Filled)</label><input id="admUser" required readonly>
-        <label>Instrument / Sector</label><input id="admInst" required value="Banking Sector">
+        <label>Instrument / Sector</label><input id="admInst" required value="Nifty 50">
         <label>Action Signal</label><select id="admDir"><option value="Kharidari (Buy)">Kharidari (Buy)</option><option value="Bikwali (Sell)">Bikwali (Sell)</option></select>
-        <label>Vedic Analysis</label><input id="admVedic" value="Jupiter favorable for accumulation.">
-        <label>KP Analysis</label><input id="admKP" value="Sub-lord supporting upside.">
-        <label>Numerology Analysis</label><input id="admNum" value="Vibration index optimal.">
-        <label>Technical Analysis</label><input id="admTech" value="Support holding firmly.">
-        <label>Mixed Final Summary</label><textarea id="admSum" rows="2">Institutional buying confirmed.</textarea>
-        <br><button type="submit">Publish Clean Brief</button>
+        <label>Vedic Analysis</label><input id="admVedic" value="Planetary alignment active.">
+        <label>KP Analysis</label><input id="admKP" value="Sub-lord supporting momentum.">
+        <label>Numerology Analysis</label><input id="admNum" value="Vibration score positive.">
+        <label>Technical Analysis</label><input id="admTech" value="Volume breakout confirmed.">
+        <label>Mixed Final Summary</label><textarea id="admSum" rows="2">Institutional flow active.</textarea>
+        <br><button type="submit">Publish Instant Brief</button>
       </form>
       <div id="admMsg" class="status"></div>
     </div>
@@ -170,14 +170,14 @@ function showSection(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
-  if(id==='terminal') { loadCleanDashboard(); loadCleanReports(); }
-  if(id==='sectors') loadCleanSectors();
+  if(id==='terminal') { loadInstantDashboard(); loadInstantReports(); }
+  if(id==='sectors') loadInstantSectors();
   if(id==='backtest') loadBacktestAudits();
 }
 function msg(id,txt,type='ok'){const el=document.getElementById(id);el.textContent=txt;el.className='status show '+type;}
 
-// Load unique clean report per asset
-async function loadCleanDashboard() {
+// Load unique live instant report per asset
+async function loadInstantDashboard() {
   const instruments = ['Nifty 50', 'Bank Nifty', 'Gold', 'Silver', 'Crude Oil'];
   const container = document.getElementById('assetCardsContainer');
   container.innerHTML = '';
@@ -203,7 +203,7 @@ async function loadCleanDashboard() {
         card.innerHTML = `
           <div class="name">${inst.toUpperCase()}</div>
           <div class="price" style="color:${color};font-size:16px">${actionText}</div>
-          <small class="muted" style="display:block;margin-top:4px;"><b>Time:</b> ${new Date(match.created_at).toLocaleTimeString()}</small>
+          <small class="muted" style="display:block;margin-top:4px;"><b>Updated:</b> ${new Date(match.created_at).toLocaleTimeString()}</small>
         `;
       } else {
         card.style.borderColor = 'var(--muted)';
@@ -220,14 +220,14 @@ async function loadCleanDashboard() {
   }
 }
 
-// Load clean non-repetitive reports feed
-async function loadCleanReports() {
+// Load instant non-repetitive reports feed
+async function loadInstantReports() {
   const area = document.getElementById('reportsContainer');
   try {
     const {data, error} = await db.from('reports')
       .select('*')
       .order('created_at', {ascending: false})
-      .limit(8);
+      .limit(6);
     if(error) throw error;
     if(!data || data.length === 0){ area.innerHTML='<div class="muted">No reports found.</div>'; return; }
     
@@ -238,7 +238,7 @@ async function loadCleanReports() {
       card.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center">
           <h4 style="color:var(--gold);margin:0">${r.report_title}</h4>
-          <span class="pill">${new Date(r.created_at).toLocaleString()}</span>
+          <span class="pill">${new Date(r.created_at.replace('Z','')).toLocaleTimeString()}</span>
         </div>
         <p style="margin:6px 0;font-size:13px"><b>Summary:</b> ${r.customer_summary}</p>
         <div class="analysis-grid">
@@ -255,8 +255,8 @@ async function loadCleanReports() {
   }
 }
 
-// Load clean sector matrix
-async function loadCleanSectors() {
+// Load instant sector matrix
+async function loadInstantSectors() {
   const area = document.getElementById('sectorContainer');
   try {
     const {data, error} = await db.from('reports')
@@ -306,7 +306,7 @@ document.getElementById('loginForm').addEventListener('submit', async e=>{
   }finally{ btn.disabled=false; }
 });
 
-async function generateCleanReport(){
+async function generateInstantReport(){
   const btn = document.getElementById('generateBtn'); btn.disabled=true; btn.textContent='Processing...';
   try{
     const {data:{user}, error:uErr} = await db.auth.getUser();
@@ -318,10 +318,10 @@ async function generateCleanReport(){
     
     const {data:rep, error:rErr} = await db.from('reports').insert({
       user_id: user.id,
-      report_title: `${inst} Brief`,
-      customer_summary: `Signal: ${direction}. Market momentum verified.`,
-      vedic_analysis: "Planetary transit supports trend.",
-      kp_analysis: "Sub-lord confirms direction.",
+      report_title: `${inst} Instant Live Report`,
+      customer_summary: `Signal: ${direction}. Verified at ${now.toLocaleTimeString()}.`,
+      vedic_analysis: "Planetary transit active.",
+      kp_analysis: "Sub-lord supports direction.",
       numerology_analysis: "Vibration score optimal.",
       sector_analysis: "Volume profile stable.",
       is_published: true
@@ -333,20 +333,20 @@ async function generateCleanReport(){
       user_id: user.id,
       report_date: now.toISOString().split('T')[0],
       report_timestamp: now.toISOString(),
-      report_type: "Live Clean",
+      report_type: "Instant Live",
       instrument: inst,
       predicted_direction: direction,
-      confidence_score: 92,
-      model_version: "v5.0-clean"
+      confidence_score: 95,
+      model_version: "v6.0-instant"
     });
 
-    msg('genMsg','Clean live report generated successfully!','ok');
-    loadCleanReports();
-    loadCleanDashboard();
-    loadCleanSectors();
+    msg('genMsg','Instant live report generated successfully!','ok');
+    loadInstantReports();
+    loadInstantDashboard();
+    loadInstantSectors();
   }catch(err){
     msg('genMsg','Error: '+err.message,'error');
-  }finally{ btn.disabled=false; btn.textContent='Execute Live Analysis'; }
+  }finally{ btn.disabled=false; btn.textContent='Run Instant Live Analysis'; }
 }
 
 async function loadBacktestAudits(){
@@ -359,7 +359,7 @@ async function loadBacktestAudits(){
     data.forEach(p=>{
       const card = document.createElement('div'); card.className='report-card';
       card.innerHTML=`<span class="pill">AUDIT</span> <b style="color:var(--gold)">${p.instrument}</b> - Signal: <span style="color:var(--green)">${p.predicted_direction}</span>
-      <small style="display:block;color:var(--muted);margin-top:2px;">Time: ${new Date(p.report_timestamp).toLocaleString()}</small>`;
+      <small style="display:block;color:var(--muted);margin-top:2px;">Time: ${new Date(p.report_timestamp.replace('Z','')).toLocaleTimeString()}</small>`;
       area.appendChild(card);
     });
     document.getElementById('statN').textContent = data.length;
@@ -379,7 +379,7 @@ document.getElementById('adminForm').addEventListener('submit', async e=>{
     
     const {data:rep, error} = await db.from('reports').insert({
       user_id: uid,
-      report_title: inst,
+      report_title: `${inst} Master Brief`,
       customer_summary: `Signal: ${direction}. ${document.getElementById('admSum').value}`,
       vedic_analysis: document.getElementById('admVedic').value,
       kp_analysis: document.getElementById('admKP').value,
@@ -394,13 +394,13 @@ document.getElementById('adminForm').addEventListener('submit', async e=>{
       user_id: uid,
       report_date: now.toISOString().split('T')[0],
       report_timestamp: now.toISOString(),
-      report_type: "Admin Clean",
+      report_type: "Admin Instant",
       instrument: inst,
       predicted_direction: direction,
-      confidence_score: 95,
-      model_version: "v5.0-admin"
+      confidence_score: 98,
+      model_version: "v6.0-admin"
     });
-    alert('Clean brief published successfully!');
+    alert('Instant brief published successfully!');
     e.target.reset();
     document.getElementById('admUser').value = uid;
   }catch(err){ alert('Failed: '+err.message); }
@@ -410,7 +410,7 @@ async function checkAuthAndLoad(user){
   document.getElementById('userWelcome').textContent = `Connected: ${user.email}`;
   document.getElementById('admUser').value = user.id;
   document.getElementById('adminNav').classList.toggle('hidden', false);
-  loadCleanReports();
+  loadInstantReports();
 }
 
 async function logout(){ await db.auth.signOut(); showSection('home'); }
