@@ -433,7 +433,30 @@ area.textContent="Error: "+error.message;
 }
 }
 
-function loadModels(){
+// Fixed loadModels function to handle direct navigation without visiting terminal first
+async function loadModels(){
+if(!currentUser){
+["vedicModel","kpModel","numModel","techModel","combinedModel"].forEach(id=>{
+el(id).textContent="Please login first.";
+});
+return;
+}
+
+if(!latestReports.length){
+try{
+const {data,error}=await db.from("reports")
+.select("id,user_id,report_title,customer_summary,vedic_analysis,kp_analysis,numerology_analysis,sector_analysis,is_published,created_at")
+.eq("user_id",currentUser.id)
+.eq("is_published",true)
+.order("created_at",{ascending:false})
+.limit(1);
+if(error)throw error;
+latestReports=data||[];
+}catch(err){
+console.error("Error loading models:",err);
+}
+}
+
 const report=latestReports[0];
 
 [["vedicModel",report?.vedic_analysis],["kpModel",report?.kp_analysis],["numModel",report?.numerology_analysis],["techModel",report?.sector_analysis],["combinedModel",report?.customer_summary]].forEach(([id,value])=>{
