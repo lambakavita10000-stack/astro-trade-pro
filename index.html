@@ -3,413 +3,784 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ASTRO TRADE PRO - Live Instant Market Intelligence Terminal</title>
+<title>ASTRO TRADE PRO | Intelligence Terminal</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--bg:#07090e;--panel:#101520;--gold:#d8ad55;--text:#f5f0e5;--muted:#94a3b8;--line:#1e293b;--green:#10b981;--red:#ef4444;--accent:#3b82f6}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-header{display:flex;justify-content:space-between;align-items:center;padding:15px 5%;border-bottom:1px solid var(--line);background:#07090ef8;position:sticky;top:0;z-index:10}
-.brand{font-weight:900;letter-spacing:1.5px;color:var(--gold);font-size:18px}nav{display:flex;gap:10px;flex-wrap:wrap}
-button,.btn{background:var(--gold);color:#07090e;border:0;border-radius:6px;padding:10px 16px;font-weight:700;cursor:pointer;font-size:14px}
-button.secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}button:disabled{opacity:.5;cursor:wait}
-main{max-width:1300px;margin:auto;padding:25px 15px 60px}
-.hero{text-align:center;padding:40px 10px} .hero h1{font-size:clamp(28px,5vw,48px);color:var(--gold);margin:10px 0}
-.panel{display:none}.panel.active{display:block}
-.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:20px}
-.grid-assets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin:20px 0}
-.asset-card{background:#0d121b;border:1px solid var(--line);border-radius:10px;padding:15px}
-.asset-card .name{font-weight:bold;color:var(--gold);font-size:15px}
-.asset-card .price{font-size:18px;font-weight:bold;margin:8px 0}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.wide{grid-column:1/-1}
-label{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}
-input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid var(--line);background:#05070a;color:white;font-size:14px}
-.status{margin:10px 0;padding:10px;border-radius:6px;display:none;font-size:13px}
-.status.show{display:block}.status.error{background:#451a03;color:#fca5a5}.status.ok{background:#064e3b;color:#a7f3d0}
-.report-card{border:1px solid var(--line);border-radius:8px;padding:15px;margin:12px 0;background:#090d14}
-.analysis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:10px;font-size:12px}
-.analysis-item{background:#05070a;border:1px solid var(--line);padding:8px;border-radius:4px}
-.pill{display:inline-block;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:bold;border:1px solid var(--gold);color:var(--gold)}
+:root{
+--bg:#07090e;
+--panel:#101520;
+--gold:#d8ad55;
+--text:#f5f0e5;
+--muted:#94a3b8;
+--line:#1e293b;
+--green:#10b981;
+--red:#ef4444;
+--blue:#3b82f6;
+--yellow:#eab308;
+}
+*{box-sizing:border-box}
+body{
+margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,sans-serif
+}
+header{
+display:flex;justify-content:space-between;align-items:center;
+padding:15px 4%;border-bottom:1px solid var(--line);
+background:#07090ef8;position:sticky;top:0;z-index:10;
+gap:15px;flex-wrap:wrap
+}
+.brand{font-weight:900;color:var(--gold);font-size:18px}
+nav{display:flex;gap:7px;flex-wrap:wrap}
+button{
+background:var(--gold);color:#07090e;border:0;
+border-radius:6px;padding:10px 14px;font-weight:bold;cursor:pointer
+}
+button.secondary{
+background:transparent;color:var(--gold);
+border:1px solid var(--gold)
+}
+button:disabled{opacity:.5;cursor:not-allowed}
+main{max-width:1350px;margin:auto;padding:22px 15px 60px}
+.panel{display:none}
+.panel.active{display:block}
+.hero{text-align:center;padding:55px 10px}
+.hero h1{font-size:clamp(28px,5vw,48px);color:var(--gold)}
+.box{
+background:var(--panel);border:1px solid var(--line);
+border-radius:12px;padding:20px;margin-bottom:20px
+}
+.grid{
+display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+gap:13px;margin:18px 0
+}
+.card{
+background:#0b1019;border:1px solid var(--line);
+border-radius:9px;padding:15px;min-width:0
+}
+.card h3,.card .name{color:var(--gold);margin-top:0}
+.price{font-size:19px;font-weight:bold;margin:10px 0}
+.muted{color:var(--muted)}
+.formgrid{
+display:grid;grid-template-columns:1fr 1fr;gap:13px
+}
+.wide{grid-column:1/-1}
+label{
+display:block;color:var(--muted);font-size:13px;margin:10px 0 5px
+}
+input,select,textarea{
+width:100%;padding:11px;border-radius:6px;
+border:1px solid var(--line);background:#05070a;
+color:white;font-size:14px
+}
+.status{display:none;padding:11px;border-radius:6px;margin:12px 0}
+.status.show{display:block}
+.status.error{background:#451a03;color:#fecaca}
+.status.ok{background:#064e3b;color:#a7f3d0}
+.report{
+background:#090d14;border:1px solid var(--line);
+border-radius:9px;padding:16px;margin:13px 0
+}
+.analysis-grid{
+display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+gap:9px;margin-top:12px
+}
+.analysis-item{
+background:#05070a;border:1px solid var(--line);
+padding:12px;border-radius:6px;overflow-wrap:anywhere
+}
+.pill{
+display:inline-block;padding:4px 9px;border-radius:20px;
+font-size:11px;border:1px solid var(--gold);color:var(--gold)
+}
+.buy{color:var(--green)}
+.sell{color:var(--red)}
+.neutral{color:var(--yellow)}
 .hidden{display:none!important}
-@media(max-width:768px){.formgrid{grid-template-columns:1fr}}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+@media(max-width:650px){
+.formgrid{grid-template-columns:1fr}
+.wide{grid-column:auto}
+header{align-items:flex-start}
+}
 </style>
 </head>
+
 <body>
+
 <header>
-  <div class="brand">✦ ASTRO TRADE PRO TERMINAL</div>
-  <nav>
-    <button class="secondary" onclick="showSection('home')">Home</button>
-    <button class="secondary" onclick="showSection('terminal')">Terminal</button>
-    <button class="secondary" onclick="showSection('sectors')">Sectors</button>
-    <button class="secondary" onclick="showSection('backtest')">Audit Hub</button>
-    <button class="secondary" onclick="showSection('login')">Login</button>
-    <button id="adminNav" class="secondary hidden" onclick="showSection('admin')">Admin</button>
-  </nav>
+<div class="brand">✦ ASTRO TRADE PRO</div>
+<nav>
+<button class="secondary" onclick="showSection('home')">Home</button>
+<button class="secondary" onclick="showSection('terminal')">Terminal</button>
+<button class="secondary" onclick="showSection('sectors')">12 Sectors</button>
+<button class="secondary" onclick="showSection('models')">Analysis Models</button>
+<button class="secondary" onclick="showSection('backtest')">Audit Hub</button>
+<button class="secondary" onclick="showSection('login')">Login</button>
+<button id="adminNav" class="secondary hidden" onclick="showSection('admin')">Admin</button>
+<button id="logoutBtn" class="secondary hidden" onclick="logout()">Logout</button>
+</nav>
 </header>
 
 <main>
-  <section id="home" class="panel active">
-    <div class="hero">
-      <div style="color:var(--gold);letter-spacing:2px;font-size:12px">LIVE INSTANT MARKET INTELLIGENCE</div>
-      <h1>Astro Trade Pro Terminal</h1>
-      <p style="color:var(--muted);max-width:700px;margin:15px auto">Zero Old Records. Only Current Live Timestamp Analysis.</p>
-      <div style="margin-top:25px;display:flex;gap:10px;justify-content:center">
-        <button onclick="showSection('terminal')">Launch Terminal</button>
-        <button class="secondary" onclick="showSection('login')">Customer Login</button>
-      </div>
-    </div>
-  </section>
 
-  <section id="login" class="panel">
-    <div class="box" style="max-width:450px;margin:40px auto">
-      <h2>Customer Login</h2>
-      <form id="loginForm">
-        <label>Email Address</label><input id="loginEmail" type="email" required style="margin-bottom:12px">
-        <label>Password</label><input id="loginPassword" type="password" required style="margin-bottom:15px">
-        <button id="loginBtn" type="submit" style="width:100%">Authenticate Terminal</button>
-      </form>
-      <div id="loginMsg" class="status"></div>
-    </div>
-  </section>
+<!-- HOME -->
+<section id="home" class="panel active">
+<div class="hero">
+<div style="color:var(--gold);letter-spacing:3px">MARKET RESEARCH & INTELLIGENCE</div>
+<h1>ASTRO TRADE PRO TERMINAL</h1>
+<p class="muted">
+Vedic Astrology | KP Astrology | Numerology |
+Technical | Fundamental | Sector Intelligence
+</p>
+<p class="muted">
+A structured market research and analysis platform.
+</p>
+<br>
+<button onclick="showSection('terminal')">Launch Terminal</button>
+<button class="secondary" onclick="showSection('login')">Customer Login</button>
+</div>
 
-  <!-- TERMINAL -->
-  <section id="terminal" class="panel">
-    <div class="box">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
-        <div><h2>Multi-Asset Intelligence Dashboard</h2><p class="muted" id="userWelcome">Connected to Live Table</p></div>
-        <button class="secondary" onclick="logout()">Disconnect</button>
-      </div>
+<div class="grid">
+<div class="card">
+<h3>Multi Asset</h3>
+<p class="muted">Index, Commodities and Currency research.</p>
+</div>
+<div class="card">
+<h3>12 Sector Matrix</h3>
+<p class="muted">Individual sector-wise research reports.</p>
+</div>
+<div class="card">
+<h3>Multi Model Analysis</h3>
+<p class="muted">Separate research categories and combined view.</p>
+</div>
+<div class="card">
+<h3>Audit Hub</h3>
+<p class="muted">Historical reports and future performance verification.</p>
+</div>
+</div>
+</section>
 
-      <!-- DASHBOARD CARDS (SHOWS ONLY LATEST INSTANT CHECK) -->
-      <div class="grid-assets" id="assetCardsContainer">
-        <div class="muted">Loading live feeds...</div>
-      </div>
+<!-- LOGIN -->
+<section id="login" class="panel">
+<div class="box" style="max-width:450px;margin:40px auto">
+<h2>Customer Login</h2>
+<form id="loginForm">
+<label>Email Address</label>
+<input id="loginEmail" type="email" required>
+<label>Password</label>
+<input id="loginPassword" type="password" required>
+<br><br>
+<button id="loginBtn" type="submit" style="width:100%">
+Authenticate
+</button>
+</form>
+<div id="loginMsg" class="status"></div>
+</div>
+</section>
 
-      <div class="box" style="margin-top:20px;border-color:var(--gold)">
-        <h3>Run Live Timestamp Analysis</h3>
-        <p class="muted">Replaces previous report instantly with current timestamp.</p>
-        <div class="formgrid">
-          <div>
-            <label>Select Asset / Instrument</label>
-            <select id="genInst" style="margin-bottom:12px">
-              <option value="Nifty 50">Nifty 50</option>
-              <option value="Bank Nifty">Bank Nifty</option>
-              <option value="Gold">Gold</option>
-              <option value="Silver">Silver</option>
-              <option value="Crude Oil">Crude Oil</option>
-            </select>
-          </div>
-          <div>
-            <label>Action Signal</label>
-            <select id="genDir" style="margin-bottom:12px">
-              <option value="Kharidari (Buy)">Kharidari (Buy ▲)</option>
-              <option value="Bikwali (Sell)">Bikwali (Sell ▼)</option>
-              <option value="Sideways">Sideways (Neutral ◆)</option>
-            </select>
-          </div>
-        </div>
-        <button id="generateBtn" onclick="generateTimestampReport()">Run Live Analysis Now</button>
-        <div id="genMsg" class="status"></div>
-      </div>
+<!-- TERMINAL -->
+<section id="terminal" class="panel">
 
-      <div style="margin-top:20px">
-        <h3>Current Active Live Feed (Latest Only)</h3>
-        <div id="reportsContainer" class="muted">Loading reports...</div>
-      </div>
-    </div>
-  </section>
+<div class="box">
+<h2>Multi Asset Intelligence Dashboard</h2>
+<p class="muted" id="userWelcome">Please login to access your reports.</p>
 
-  <!-- SECTOR INTELLIGENCE MATRIX -->
-  <section id="sectors" class="panel">
-    <div class="box">
-      <h2>Sector Intelligence Matrix</h2>
-      <p class="muted">Clear-cut live status based strictly on latest check.</p>
-      <div id="sectorContainer" class="grid-assets" style="margin-top:20px">
-        <div class="muted">Loading sector matrix...</div>
-      </div>
-    </div>
-  </section>
+<h3 style="color:var(--gold)">Supported Instruments</h3>
+<div class="grid" id="assetCards"></div>
 
-  <section id="backtest" class="panel">
-    <div class="box" style="border-color:var(--gold)">
-      <h2>Audit Hub</h2>
-      <p class="muted">Verification logs.</p>
-      <div class="grid-assets" style="margin-bottom:15px">
-        <div class="asset-card"><div class="name">TOTAL AUDITED RECORDS</div><div class="price" id="statN" style="color:var(--gold)">0</div></div>
-      </div>
-      <button class="secondary" onclick="loadAuditLogs()">▶ Refresh Audit Logs</button>
-      <div id="auditLogsContainer" style="margin-top:15px" class="muted">Loading audits...</div>
-    </div>
-  </section>
+<hr>
 
-  <section id="admin" class="panel">
-    <div class="box">
-      <h2>Admin Command Center</h2>
-      <p class="muted">Publish live brief.</p>
-      <form id="adminForm" style="margin-top:15px">
-        <label>Target User UUID (Auto-Filled)</label><input id="admUser" required readonly>
-        <label>Instrument / Sector</label><input id="admInst" required value="Nifty 50">
-        <label>Action Signal</label><select id="admDir"><option value="Kharidari (Buy)">Kharidari (Buy)</option><option value="Bikwali (Sell)">Bikwali (Sell)</option></select>
-        <label>Vedic Analysis</label><input id="admVedic" value="Planetary alignment active.">
-        <label>KP Analysis</label><input id="admKP" value="Sub-lord supporting momentum.">
-        <label>Numerology Analysis</label><input id="admNum" value="Vibration score positive.">
-        <label>Technical Analysis</label><input id="admTech" value="Volume breakout confirmed.">
-        <label>Mixed Final Summary</label><textarea id="admSum" rows="2">Institutional flow active.</textarea>
-        <br><button type="submit">Publish Brief</button>
-      </form>
-      <div id="admMsg" class="status"></div>
-    </div>
-  </section>
+<h3>Latest Published Reports</h3>
+<p class="muted">
+Only reports available in the database are displayed.
+</p>
+<div id="reportsContainer" class="muted">Loading reports...</div>
+</div>
+
+</section>
+
+<!-- SECTORS -->
+<section id="sectors" class="panel">
+<div class="box">
+<h2>12 Sector Intelligence Matrix</h2>
+<p class="muted">
+Each sector is displayed separately. Missing reports are marked unavailable.
+</p>
+<div class="grid" id="sectorContainer"></div>
+</div>
+</section>
+
+<!-- MODELS -->
+<section id="models" class="panel">
+<div class="box">
+<h2>Multi Model Research Centre</h2>
+<p class="muted">
+The following categories are kept separate to avoid mixing different research methods.
+</p>
+<div class="grid">
+<div class="card">
+<h3>Vedic Astrology</h3>
+<p class="muted">Planetary transit and Vedic research reports.</p>
+<div id="vedicModel">No report selected.</div>
+</div>
+<div class="card">
+<h3>KP Astrology</h3>
+<p class="muted">KP and sub-lord research reports.</p>
+<div id="kpModel">No report selected.</div>
+</div>
+<div class="card">
+<h3>Numerology</h3>
+<p class="muted">Numerological research reports.</p>
+<div id="numModel">No report selected.</div>
+</div>
+<div class="card">
+<h3>Technical Analysis</h3>
+<p class="muted">Technical research and market structure.</p>
+<div id="techModel">No report selected.</div>
+</div>
+<div class="card">
+<h3>Combined Research</h3>
+<p class="muted">Combined summary from the published report.</p>
+<div id="combinedModel">No report selected.</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- AUDIT -->
+<section id="backtest" class="panel">
+<div class="box">
+<h2>Audit & Performance Hub</h2>
+<p class="muted">
+This section currently displays historical report records.
+It does not claim trading accuracy or verified backtesting.
+</p>
+
+<div class="grid">
+<div class="card">
+<div class="name">AVAILABLE REPORT RECORDS</div>
+<div class="price" id="statN">0</div>
+</div>
+<div class="card">
+<div class="name">VERIFIED BACKTEST ACCURACY</div>
+<div class="price neutral">Not Available</div>
+</div>
+</div>
+
+<button class="secondary" onclick="loadAuditLogs()">Refresh Audit Logs</button>
+<div id="auditLogsContainer" style="margin-top:15px"></div>
+
+<hr>
+<h3>Backtesting Requirements</h3>
+<p class="muted">
+Verified backtesting requires saved historical predictions, their original timestamps,
+defined prediction horizons and actual historical market prices.
+Until those are integrated, accuracy and profit figures will not be displayed.
+</p>
+</div>
+</section>
+
+<!-- ADMIN -->
+<section id="admin" class="panel">
+<div class="box">
+<h2>Admin Command Centre</h2>
+<p class="muted">
+Publish a research report. Enter actual research findings; do not enter unverified claims.
+</p>
+
+<form id="adminForm">
+<label>Customer User UUID</label>
+<input id="admUser" required placeholder="Customer Supabase UUID">
+
+<label>Instrument / Sector Name</label>
+<input id="admInst" required placeholder="Example: Nifty 50 or Banking">
+
+<label>Action Signal</label>
+<select id="admDir">
+<option value="Kharidari (Buy)">Buy</option>
+<option value="Bikwali (Sell)">Sell</option>
+<option value="Sideways">Sideways / Neutral</option>
+</select>
+
+<label>Vedic Analysis</label>
+<textarea id="admVedic" rows="3" required></textarea>
+
+<label>KP Analysis</label>
+<textarea id="admKP" rows="3" required></textarea>
+
+<label>Numerology Analysis</label>
+<textarea id="admNum" rows="3" required></textarea>
+
+<label>Technical Analysis</label>
+<textarea id="admTech" rows="3" required></textarea>
+
+<label>Combined Final Summary</label>
+<textarea id="admSum" rows="3" required></textarea>
+
+<br><br>
+<button id="publishBtn" type="submit">Publish Research Report</button>
+</form>
+
+<div id="admMsg" class="status"></div>
+</div>
+</section>
+
 </main>
 
 <script>
-const SUPABASE_URL = "https://ahrnjncdcsdmguhvhlfj.supabase.co";
-const SUPABASE_KEY = "sb_publishable_ktg8SZPkNqOWie8OK2rtIQ_YBM22F9a";
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL =
+"https://ahrnjncdcsdmguhvhlfj.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_ktg8SZPkNqOWie8OK2rtIQ_YBM22F9a";
+
+const db = window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+const instruments = [
+"Nifty 50",
+"Bank Nifty",
+"Sensex",
+"Gold",
+"Silver",
+"Crude Oil",
+"Natural Gas",
+"USD/INR"
+];
+
+const sectors = [
+"Banking",
+"Information Technology",
+"Pharma",
+"Healthcare",
+"Auto",
+"FMCG",
+"Metal",
+"Energy",
+"Realty",
+"Infrastructure",
+"Financial Services",
+"Media"
+];
+
+let currentUser = null;
+let latestReports = [];
+
+function el(id){
+return document.getElementById(id);
+}
+
+function safeText(value){
+return String(value ?? "");
+}
+
+function makeNode(tag, text, className){
+const node = document.createElement(tag);
+node.textContent = safeText(text);
+if(className) node.className = className;
+return node;
+}
+
+function showMessage(id,text,type="ok"){
+const box = el(id);
+box.textContent = text;
+box.className = "status show " + type;
+}
 
 function showSection(id){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-  if(id==='terminal') { loadCurrentOnlyData(); }
-  if(id==='sectors') loadCurrentOnlySectors();
-  if(id==='backtest') loadAuditLogs();
-}
-function msg(id,txt,type='ok'){const el=document.getElementById(id);el.textContent=txt;el.className='status show '+type;}
-
-// Strictly filters out old records and displays ONLY the absolute latest check per asset
-async function loadCurrentOnlyData() {
-  const instruments = ['Nifty 50', 'Bank Nifty', 'Gold', 'Silver', 'Crude Oil'];
-  const container = document.getElementById('assetCardsContainer');
-  const reportsArea = document.getElementById('reportsContainer');
-  container.innerHTML = '';
-  reportsArea.innerHTML = '';
-  
-  try {
-    const {data, error} = await db.from('reports')
-      .select('*')
-      .order('created_at', {ascending: false});
-    if(error) throw error;
-    
-    // Map absolute latest report per instrument uniquely
-    const latestMap = new Map();
-    if(data) {
-      data.forEach(r => {
-        instruments.forEach(inst => {
-          if((r.report_title || '').toLowerCase().includes(inst.toLowerCase()) && !latestMap.has(inst)) {
-            latestMap.set(inst, r);
-          }
-        });
-      });
-    }
-    
-    // Render Dashboard Cards
-    instruments.forEach(inst => {
-      const card = document.createElement('div');
-      card.className = 'asset-card';
-      const match = latestMap.get(inst);
-      
-      if(match) {
-        const isBuy = (match.customer_summary || '').toLowerCase().includes('kharidari') || (match.customer_summary || '').toLowerCase().includes('buy');
-        const color = isBuy ? 'var(--green)' : 'var(--red)';
-        const actionText = isBuy ? '▲ KHARIDARI (BUY)' : '▼ BIKWALI (SELL)';
-        
-        card.style.borderColor = color;
-        card.innerHTML = `
-          <div class="name">${inst.toUpperCase()}</div>
-          <div class="price" style="color:${color};font-size:16px">${actionText}</div>
-          <small class="muted" style="display:block;margin-top:4px;"><b>Checked at:</b> ${new Date(match.created_at).toLocaleTimeString()}</small>
-        `;
-      } else {
-        card.style.borderColor = 'var(--muted)';
-        card.innerHTML = `
-          <div class="name">${inst.toUpperCase()}</div>
-          <div class="price" style="color:var(--muted);font-size:14px">Awaiting Run</div>
-          <small class="muted">Run analysis below</small>
-        `;
-      }
-      container.appendChild(card);
-    });
-
-    // Render Feed strictly showing ONLY the latest unique current check records (NO old garbage)
-    const uniqueReports = Array.from(latestMap.values());
-    if(uniqueReports.length === 0) {
-      reportsArea.innerHTML = '<div class="muted">No active reports found. Run analysis above.</div>';
-      return;
-    }
-
-    uniqueReports.forEach(r => {
-      const card = document.createElement('div');
-      card.className = 'report-card';
-      card.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <h4 style="color:var(--gold);margin:0">${r.report_title}</h4>
-          <span class="pill">${new Date(r.created_at).toLocaleTimeString()}</span>
-        </div>
-        <p style="margin:6px 0;font-size:13px"><b>Summary:</b> ${r.customer_summary}</p>
-        <div class="analysis-grid">
-          <div class="analysis-item"><b>Vedic:</b> ${r.vedic_analysis || 'N/A'}</div>
-          <div class="analysis-item"><b>KP:</b> ${r.kp_analysis || 'N/A'}</div>
-          <div class="analysis-item"><b>Numerology:</b> ${r.numerology_analysis || 'N/A'}</div>
-          <div class="analysis-item"><b>Technical:</b> ${r.sector_analysis || 'N/A'}</div>
-        </div>
-      `;
-      reportsArea.appendChild(card);
-    });
-
-  } catch(err) {
-    container.innerHTML = `<div class="status error show">Error: ${err.message}</div>`;
-  }
-}
-
-async function loadCurrentOnlySectors() {
-  const area = document.getElementById('sectorContainer');
-  try {
-    const {data, error} = await db.from('reports')
-      .select('*')
-      .order('created_at', {ascending: false});
-    if(error) throw error;
-    if(!data || data.length === 0) {
-      area.innerHTML = '<div class="muted">No sector records found.</div>';
-      return;
-    }
-    
-    const latestMap = new Map();
-    const instruments = ['Nifty 50', 'Bank Nifty', 'Gold', 'Silver', 'Crude Oil'];
-    data.forEach(r => {
-      instruments.forEach(inst => {
-        if((r.report_title || '').toLowerCase().includes(inst.toLowerCase()) && !latestMap.has(inst)) {
-          latestMap.set(inst, r);
-        }
-      });
-    });
-    
-    const uniqueSectors = Array.from(latestMap.values());
-    area.innerHTML = '';
-    uniqueSectors.forEach(r => {
-      const isBuy = (r.customer_summary || '').toLowerCase().includes('kharidari') || (r.customer_summary || '').toLowerCase().includes('buy');
-      const color = isBuy ? 'var(--green)' : 'var(--red)';
-      const signal = isBuy ? '▲ KHARIDARI (BUY)' : '▼ BIKWALI (SELL)';
-      
-      const card = document.createElement('div');
-      card.className = 'asset-card';
-      card.style.borderColor = color;
-      card.innerHTML = `
-        <div class="name">${r.report_title}</div>
-        <div class="price" style="color:${color};font-size:16px">${signal}</div>
-        <small class="muted" style="display:block;margin-top:4px;">Checked: ${new Date(r.created_at).toLocaleTimeString()}</small>
-      `;
-      area.appendChild(card);
-    });
-  } catch(err) {
-    area.innerHTML = `<div class="status error show">Error: ${err.message}</div>`;
-  }
-}
-
-document.getElementById('loginForm').addEventListener('submit', async e=>{
-  e.preventDefault();
-  const btn = document.getElementById('loginBtn'); btn.disabled=true;
-  try{
-    const {data, error} = await db.auth.signInWithPassword({
-      email: document.getElementById('loginEmail').value.trim(),
-      password: document.getElementById('loginPassword').value
-    });
-    if(error) throw error;
-    msg('loginMsg','Authentication successful! Loading terminal...','ok');
-    setTimeout(()=>{ checkAuthAndLoad(data.user); showSection('terminal'); }, 800);
-  }catch(err){
-    msg('loginMsg','Login failed: '+err.message,'error');
-  }finally{ btn.disabled=false; }
+document.querySelectorAll(".panel").forEach(p=>{
+p.classList.remove("active");
 });
 
-async function generateTimestampReport(){
-  const btn = document.getElementById('generateBtn'); btn.disabled=true; btn.textContent='Processing Live Time...';
-  try{
-    const {data:{user}, error:uErr} = await db.auth.getUser();
-    if(uErr || !user) throw new Error('Session expired. Please login.');
-    
-    const inst = document.getElementById('genInst').value;
-    const direction = document.getElementById('genDir').value;
-    const now = new Date();
-    
-    // Inserts fresh record with exact current timestamp
-    const {data:rep, error:rErr} = await db.from('reports').insert({
-      user_id: user.id,
-      report_title: `${inst} Live Report`,
-      customer_summary: `Signal: ${direction}. Checked live at ${now.toLocaleTimeString()}.`,
-      vedic_analysis: "Planetary transit active for current hour.",
-      kp_analysis: "Sub-lord confirms instant momentum.",
-      numerology_analysis: "Vibration score aligned with current time.",
-      sector_analysis: "Volume profile updated.",
-      is_published: true
-    }).select().single();
-    if(rErr) throw rErr;
+el(id).classList.add("active");
+window.scrollTo(0,0);
 
-    msg('genMsg','Live report generated for current timestamp!','ok');
-    loadCurrentOnlyData();
-  }catch(err){
-    msg('genMsg','Error: '+err.message,'error');
-  }finally{ btn.disabled=false; btn.textContent='Run Live Analysis Now'; }
+if(id==="terminal") loadCurrentData();
+if(id==="sectors") loadSectors();
+if(id==="backtest") loadAuditLogs();
+if(id==="models") loadModels();
+}
+
+function isAdmin(user){
+return user?.app_metadata?.role === "admin";
+}
+
+function getSignal(summary){
+const value = safeText(summary).toLowerCase();
+
+if(value.includes("sideways") || value.includes("neutral")){
+return {label:"◆ SIDEWAYS / NEUTRAL",className:"neutral"};
+}
+
+if(value.includes("kharidari") || value.includes("buy")){
+return {label:"▲ KHARIDARI / BUY",className:"buy"};
+}
+
+if(value.includes("bikwali") || value.includes("sell")){
+return {label:"▼ BIKWALI / SELL",className:"sell"};
+}
+
+return {label:"SIGNAL NOT SPECIFIED",className:"neutral"};
+}
+
+function formatTime(value){
+if(!value) return "Timestamp unavailable";
+
+const date = new Date(value);
+
+if(Number.isNaN(date.getTime())) return "Invalid timestamp";
+
+return date.toLocaleString("en-IN");
+}
+
+function makeReportCard(report){
+const card = document.createElement("div");
+card.className = "report";
+
+const heading = document.createElement("h3");
+heading.className = "name";
+heading.textContent = safeText(report.report_title);
+
+const signal = getSignal(report.customer_summary);
+
+const signalNode = makeNode("div",signal.label,signal.className);
+
+const time = makeNode("small","Published: "+formatTime(report.created_at),"muted");
+
+const summary = document.createElement("p");
+summary.textContent = "Summary: "+safeText(report.customer_summary);
+
+const grid = document.createElement("div");
+grid.className = "analysis-grid";
+
+const fields = [
+["Vedic Analysis",report.vedic_analysis],
+["KP Analysis",report.kp_analysis],
+["Numerology Analysis",report.numerology_analysis],
+["Technical Analysis",report.sector_analysis]
+];
+
+fields.forEach(([title,value])=>{
+const item = document.createElement("div");
+item.className = "analysis-item";
+
+const strong = makeNode("b",title);
+const content = document.createElement("p");
+content.textContent = safeText(value) || "Not available";
+
+item.append(strong,content);
+grid.appendChild(item);
+});
+
+card.append(heading,signalNode,time,summary,grid);
+return card;
+}
+
+async function loadCurrentData(){
+if(!currentUser){
+el("reportsContainer").textContent = "Please login first.";
+return;
+}
+
+el("assetCards").replaceChildren();
+el("reportsContainer").textContent = "Loading reports...";
+
+instruments.forEach(name=>{
+const card = document.createElement("div");
+card.className = "card";
+card.appendChild(makeNode("div",name,"name"));
+card.appendChild(makeNode("div","Report availability will appear below.","muted"));
+el("assetCards").appendChild(card);
+});
+
+try{
+const {data,error} = await db
+.from("reports")
+.select("id,user_id,report_title,customer_summary,vedic_analysis,kp_analysis,numerology_analysis,sector_analysis,is_published,created_at")
+.eq("user_id",currentUser.id)
+.eq("is_published",true)
+.order("created_at",{ascending:false})
+.limit(100);
+
+if(error) throw error;
+
+latestReports = data || [];
+
+el("reportsContainer").replaceChildren();
+
+if(latestReports.length===0){
+el("reportsContainer").textContent = "No published reports found.";
+return;
+}
+
+const latestMap = new Map();
+
+latestReports.forEach(report=>{
+const title = safeText(report.report_title).toLowerCase();
+
+const match = instruments.find(name=>
+title.includes(name.toLowerCase())
+);
+
+if(match && !latestMap.has(match)){
+latestMap.set(match,report);
+}
+});
+
+el("assetCards").replaceChildren();
+
+instruments.forEach(name=>{
+const card = document.createElement("div");
+card.className = "card";
+
+card.appendChild(makeNode("h3",name,"name"));
+
+const report = latestMap.get(name);
+
+if(report){
+const signal = getSignal(report.customer_summary);
+card.appendChild(makeNode("div",signal.label,signal.className));
+card.appendChild(makeNode("small","Checked: "+formatTime(report.created_at),"muted"));
+}else{
+card.appendChild(makeNode("div","NO REPORT","neutral"));
+card.appendChild(makeNode("small","Research not available","muted"));
+}
+
+el("assetCards").appendChild(card);
+});
+
+latestReports.forEach(report=>{
+el("reportsContainer").appendChild(makeReportCard(report));
+});
+
+}catch(error){
+el("reportsContainer").textContent = "Error: "+error.message;
+}
+}
+
+async function loadSectors(){
+const area = el("sectorContainer");
+area.replaceChildren();
+
+if(!currentUser){
+area.textContent = "Please login first.";
+return;
+}
+
+try{
+const {data,error} = await db
+.from("reports")
+.select("report_title,customer_summary,created_at")
+.eq("user_id",currentUser.id)
+.eq("is_published",true)
+.order("created_at",{ascending:false})
+.limit(200);
+
+if(error) throw error;
+
+const reports = data || [];
+
+sectors.forEach(name=>{
+const card = document.createElement("div");
+card.className = "card";
+
+card.appendChild(makeNode("h3",name,"name"));
+
+const report = reports.find(r=>
+safeText(r.report_title).toLowerCase().includes(name.toLowerCase())
+);
+
+if(report){
+const signal = getSignal(report.customer_summary);
+card.appendChild(makeNode("div",signal.label,signal.className));
+card.appendChild(makeNode("small","Checked: "+formatTime(report.created_at),"muted"));
+}else{
+card.appendChild(makeNode("div","NO SECTOR REPORT","neutral"));
+card.appendChild(makeNode("small","Data not available","muted"));
+}
+
+area.appendChild(card);
+});
+
+}catch(error){
+area.textContent = "Error: "+error.message;
+}
+}
+
+function loadModels(){
+const report = latestReports[0];
+
+const fields = [
+["vedicModel",report?.vedic_analysis],
+["kpModel",report?.kp_analysis],
+["numModel",report?.numerology_analysis],
+["techModel",report?.sector_analysis],
+["combinedModel",report?.customer_summary]
+];
+
+fields.forEach(([id,value])=>{
+el(id).textContent = value || "No published analysis available.";
+});
 }
 
 async function loadAuditLogs(){
-  const area = document.getElementById('auditLogsContainer');
-  try{
-    const {data, error} = await db.from('reports').select('*').order('created_at', {ascending:false}).limit(20);
-    if(error) throw error;
-    if(!data || data.length===0){ area.innerHTML='<div class="muted">No audit records found.</div>'; document.getElementById('statN').textContent='0'; return; }
-    area.innerHTML='';
-    data.forEach(p=>{
-      const card = document.createElement('div'); card.className='report-card';
-      card.innerHTML=`<span class="pill">AUDIT</span> <b style="color:var(--gold)">${p.report_title}</b>
-      <small style="display:block;color:var(--muted);margin-top:2px;">Timestamp: ${new Date(p.created_at).toLocaleTimeString()}</small>`;
-      area.appendChild(card);
-    });
-    document.getElementById('statN').textContent = data.length;
-  }catch(err){
-    area.innerHTML=`<div class="status error show">Error: ${err.message}</div>`;
-  }
+const area = el("auditLogsContainer");
+
+if(!currentUser){
+area.textContent = "Please login first.";
+return;
 }
 
-document.getElementById('adminForm').addEventListener('submit', async e=>{
-  e.preventDefault();
-  try{
-    const uid = document.getElementById('admUser').value.trim();
-    if(!uid) throw new Error('User UUID missing.');
-    const inst = document.getElementById('admInst').value;
-    const direction = document.getElementById('admDir').value;
-    
-    const {data:rep, error} = await db.from('reports').insert({
-      user_id: uid,
-      report_title: `${inst} Brief`,
-      customer_summary: `Signal: ${direction}. ${document.getElementById('admSum').value}`,
-      vedic_analysis: document.getElementById('admVedic').value,
-      kp_analysis: document.getElementById('admKP').value,
-      numerology_analysis: document.getElementById('admNum').value,
-      sector_analysis: document.getElementById('admTech').value,
-      is_published: true
-    }).select().single();
-    if(error) throw error;
+area.textContent = "Loading historical reports...";
 
-    alert('Live brief published successfully!');
-    e.target.reset();
-    document.getElementById('admUser').value = uid;
-    loadCurrentOnlyData();
-  }catch(err){ alert('Failed: '+err.message); }
+try{
+const {data,error} = await db
+.from("reports")
+.select("report_title,customer_summary,created_at")
+.eq("user_id",currentUser.id)
+.eq("is_published",true)
+.order("created_at",{ascending:false})
+.limit(100);
+
+if(error) throw error;
+
+const records = data || [];
+
+el("statN").textContent = records.length;
+area.replaceChildren();
+
+if(records.length===0){
+area.textContent = "No historical reports found.";
+return;
+}
+
+records.forEach(report=>{
+const card = document.createElement("div");
+card.className = "report";
+
+card.appendChild(makeNode("b",report.report_title,"name"));
+card.appendChild(makeNode("p",report.customer_summary));
+card.appendChild(makeNode("small","Original report timestamp: "+formatTime(report.created_at),"muted"));
+
+area.appendChild(card);
+});
+
+}catch(error){
+area.textContent = "Audit error: "+error.message;
+}
+}
+
+el("loginForm").addEventListener("submit",async event=>{
+event.preventDefault();
+
+const button = el("loginBtn");
+button.disabled = true;
+
+try{
+const {data,error} = await db.auth.signInWithPassword({
+email:el("loginEmail").value.trim(),
+password:el("loginPassword").value
+});
+
+if(error) throw error;
+
+await checkAuthAndLoad(data.user);
+showMessage("loginMsg","Login successful.","ok");
+showSection("terminal");
+
+}catch(error){
+showMessage("loginMsg","Login failed: "+error.message,"error");
+}finally{
+button.disabled = false;
+}
 });
 
 async function checkAuthAndLoad(user){
-  document.getElementById('userWelcome').textContent = `Connected: ${user.email}`;
-  document.getElementById('admUser').value = user.id;
-  document.getElementById('adminNav').classList.toggle('hidden', false);
-  loadCurrentOnlyData();
+currentUser = user;
+
+el("userWelcome").textContent =
+"Connected: "+safeText(user.email);
+
+const admin = isAdmin(user);
+
+el("adminNav").classList.toggle("hidden",!admin);
+el("logoutBtn").classList.remove("hidden");
+
+await loadCurrentData();
 }
 
-async function logout(){ await db.auth.signOut(); showSection('home'); }
+async function logout(){
+await db.auth.signOut();
+currentUser = null;
+latestReports = [];
 
-window.addEventListener('DOMContentLoaded', async ()=>{
-  const {data:{session}} = await db.auth.getSession();
-  if(session?.user) { checkAuthAndLoad(session.user); }
+el("adminNav").classList.add("hidden");
+el("logoutBtn").classList.add("hidden");
+
+showSection("home");
+}
+
+el("adminForm").addEventListener("submit",async event=>{
+event.preventDefault();
+
+if(!currentUser || !isAdmin(currentUser)){
+showMessage("admMsg","Admin permission required.","error");
+return;
+}
+
+const button = el("publishBtn");
+button.disabled = true;
+
+try{
+const uid = el("admUser").value.trim();
+const instrument = el("admInst").value.trim();
+
+if(!uid || !instrument){
+throw new Error("Customer UUID and instrument are required.");
+}
+
+const direction = el("admDir").value;
+
+const {error} = await db.from("reports").insert({
+user_id:uid,
+report_title:instrument+" Research Report",
+customer_summary:"Signal: "+direction+". "+el("admSum").value.trim(),
+vedic_analysis:el("admVedic").value.trim(),
+kp_analysis:el("admKP").value.trim(),
+numerology_analysis:el("admNum").value.trim(),
+sector_analysis:el("admTech").value.trim(),
+is_published:true
+});
+
+if(error) throw error;
+
+showMessage("admMsg","Report published successfully.","ok");
+event.target.reset();
+
+}catch(error){
+showMessage("admMsg","Publish failed: "+error.message,"error");
+}finally{
+button.disabled = false;
+}
+});
+
+window.addEventListener("DOMContentLoaded",async()=>{
+try{
+const {data,error} = await db.auth.getSession();
+
+if(error) throw error;
+
+if(data.session?.user){
+await checkAuthAndLoad(data.session.user);
+}
+}catch(error){
+console.error(error);
+}
 });
 </script>
+
 </body>
 </html>
