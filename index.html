@@ -1,113 +1,47 @@
-<!DOCTYPE html>
-<html lang="hi">
+<!DOCTYPE html><html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ASTRO TRADE PRO | Intelligence Terminal</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root{
---bg:#07090e;
---panel:#101520;
---gold:#d8ad55;
---text:#f5f0e5;
---muted:#94a3b8;
---line:#1e293b;
---green:#10b981;
---red:#ef4444;
---blue:#3b82f6;
---yellow:#eab308;
-}
+:root{--bg:#07090e;--panel:#101520;--gold:#d8ad55;--text:#f5f0e5;--muted:#94a3b8;--line:#1e293b;--green:#10b981;--red:#ef4444;--yellow:#eab308}
 *{box-sizing:border-box}
-body{
-margin:0;background:var(--bg);color:var(--text);
-font-family:Arial,sans-serif
-}
-header{
-display:flex;justify-content:space-between;align-items:center;
-padding:15px 4%;border-bottom:1px solid var(--line);
-background:#07090ef8;position:sticky;top:0;z-index:10;
-gap:15px;flex-wrap:wrap
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:15px 4%;border-bottom:1px solid var(--line);background:#07090ef8;position:sticky;top:0;z-index:10;gap:15px;flex-wrap:wrap}
 .brand{font-weight:900;color:var(--gold);font-size:18px}
 nav{display:flex;gap:7px;flex-wrap:wrap}
-button{
-background:var(--gold);color:#07090e;border:0;
-border-radius:6px;padding:10px 14px;font-weight:bold;cursor:pointer
-}
-button.secondary{
-background:transparent;color:var(--gold);
-border:1px solid var(--gold)
-}
+button{background:var(--gold);color:#07090e;border:0;border-radius:6px;padding:10px 14px;font-weight:bold;cursor:pointer}
+button.secondary{background:transparent;color:var(--gold);border:1px solid var(--gold)}
 button:disabled{opacity:.5;cursor:not-allowed}
 main{max-width:1350px;margin:auto;padding:22px 15px 60px}
-.panel{display:none}
-.panel.active{display:block}
+.panel{display:none}.panel.active{display:block}
 .hero{text-align:center;padding:55px 10px}
 .hero h1{font-size:clamp(28px,5vw,48px);color:var(--gold)}
-.box{
-background:var(--panel);border:1px solid var(--line);
-border-radius:12px;padding:20px;margin-bottom:20px
-}
-.grid{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-gap:13px;margin:18px 0
-}
-.card{
-background:#0b1019;border:1px solid var(--line);
-border-radius:9px;padding:15px;min-width:0
-}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px;margin:18px 0}
+.card{background:#0b1019;border:1px solid var(--line);border-radius:9px;padding:15px;min-width:0}
 .card h3,.card .name{color:var(--gold);margin-top:0}
 .price{font-size:19px;font-weight:bold;margin:10px 0}
 .muted{color:var(--muted)}
-.formgrid{
-display:grid;grid-template-columns:1fr 1fr;gap:13px
-}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .wide{grid-column:1/-1}
-label{
-display:block;color:var(--muted);font-size:13px;margin:10px 0 5px
-}
-input,select,textarea{
-width:100%;padding:11px;border-radius:6px;
-border:1px solid var(--line);background:#05070a;
-color:white;font-size:14px
-}
+label{display:block;color:var(--muted);font-size:13px;margin:10px 0 5px}
+input,select,textarea{width:100%;padding:11px;border-radius:6px;border:1px solid var(--line);background:#05070a;color:white;font-size:14px}
 .status{display:none;padding:11px;border-radius:6px;margin:12px 0}
-.status.show{display:block}
-.status.error{background:#451a03;color:#fecaca}
-.status.ok{background:#064e3b;color:#a7f3d0}
-.report{
-background:#090d14;border:1px solid var(--line);
-border-radius:9px;padding:16px;margin:13px 0
-}
-.analysis-grid{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-gap:9px;margin-top:12px
-}
-.analysis-item{
-background:#05070a;border:1px solid var(--line);
-padding:12px;border-radius:6px;overflow-wrap:anywhere
-}
-.pill{
-display:inline-block;padding:4px 9px;border-radius:20px;
-font-size:11px;border:1px solid var(--gold);color:var(--gold)
-}
-.buy{color:var(--green)}
-.sell{color:var(--red)}
-.neutral{color:var(--yellow)}
+.status.show{display:block}.status.error{background:#451a03;color:#fecaca}.status.ok{background:#064e3b;color:#a7f3d0}
+.report{background:#090d14;border:1px solid var(--line);border-radius:9px;padding:16px;margin:13px 0}
+.analysis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin-top:12px}
+.analysis-item{background:#05070a;border:1px solid var(--line);padding:12px;border-radius:6px;overflow-wrap:anywhere}
+.pill{display:inline-block;padding:4px 9px;border-radius:20px;font-size:11px;border:1px solid var(--gold);color:var(--gold)}
+.buy{color:var(--green)}.sell{color:var(--red)}.neutral{color:var(--yellow)}
 .hidden{display:none!important}
 hr{border:0;border-top:1px solid var(--line);margin:20px 0}
-@media(max-width:650px){
-.formgrid{grid-template-columns:1fr}
-.wide{grid-column:auto}
-header{align-items:flex-start}
-}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted);font-size:13px}
+@media(max-width:650px){.formgrid{grid-template-columns:1fr}.wide{grid-column:auto}header{align-items:flex-start}}
 </style>
 </head>
-
 <body>
-
 <header>
 <div class="brand">✦ ASTRO TRADE PRO</div>
 <nav>
@@ -121,666 +55,339 @@ header{align-items:flex-start}
 <button id="logoutBtn" class="secondary hidden" onclick="logout()">Logout</button>
 </nav>
 </header>
-
-<main>
-
-<!-- HOME -->
-<section id="home" class="panel active">
+<main><section id="home" class="panel active">
 <div class="hero">
 <div style="color:var(--gold);letter-spacing:3px">MARKET RESEARCH & INTELLIGENCE</div>
 <h1>ASTRO TRADE PRO TERMINAL</h1>
-<p class="muted">
-Vedic Astrology | KP Astrology | Numerology |
-Technical | Fundamental | Sector Intelligence
-</p>
-<p class="muted">
-A structured market research and analysis platform.
-</p>
-<br>
+<p class="muted">Vedic Astrology | KP Astrology | Numerology | Technical | Fundamental | Sector Intelligence</p>
+<p class="muted">A structured market research and analysis platform.</p><br>
 <button onclick="showSection('terminal')">Launch Terminal</button>
 <button class="secondary" onclick="showSection('login')">Customer Login</button>
 </div>
-
 <div class="grid">
-<div class="card">
-<h3>Multi Asset</h3>
-<p class="muted">Index, Commodities and Currency research.</p>
+<div class="card"><h3>Multi Asset</h3><p class="muted">Index, Commodities and Currency research.</p></div>
+<div class="card"><h3>12 Sector Matrix</h3><p class="muted">Individual sector-wise research reports.</p></div>
+<div class="card"><h3>Multi Model Analysis</h3><p class="muted">Separate research categories and combined view.</p></div>
+<div class="card"><h3>Audit Hub</h3><p class="muted">Historical reports and future performance verification.</p></div>
 </div>
-<div class="card">
-<h3>12 Sector Matrix</h3>
-<p class="muted">Individual sector-wise research reports.</p>
-</div>
-<div class="card">
-<h3>Multi Model Analysis</h3>
-<p class="muted">Separate research categories and combined view.</p>
-</div>
-<div class="card">
-<h3>Audit Hub</h3>
-<p class="muted">Historical reports and future performance verification.</p>
-</div>
-</div>
-</section>
-
-<!-- LOGIN -->
-<section id="login" class="panel">
+</section><section id="login" class="panel">
 <div class="box" style="max-width:450px;margin:40px auto">
 <h2>Customer Login</h2>
 <form id="loginForm">
-<label>Email Address</label>
-<input id="loginEmail" type="email" required>
-<label>Password</label>
-<input id="loginPassword" type="password" required>
-<br><br>
-<button id="loginBtn" type="submit" style="width:100%">
-Authenticate
-</button>
+<label>Email Address</label><input id="loginEmail" type="email" required>
+<label>Password</label><input id="loginPassword" type="password" required>
+<br><br><button id="loginBtn" type="submit" style="width:100%">Authenticate</button>
 </form>
 <div id="loginMsg" class="status"></div>
 </div>
-</section>
-
-<!-- TERMINAL -->
-<section id="terminal" class="panel">
-
+</section><section id="terminal" class="panel">
 <div class="box">
 <h2>Multi Asset Intelligence Dashboard</h2>
-<p class="muted" id="userWelcome">Please login to access your reports.</p>
-
-<h3 style="color:var(--gold)">Supported Instruments</h3>
+<p class="muted" id="userWelcome">Please login to access your reports.</p><div class="report">
+<h2 style="color:var(--gold)">EOD Market Analysis</h2>
+<p class="muted">Historical end-of-day data se technical analysis generate karein. Yeh live market price nahi hai.</p>
+<label>NSE Stock Symbol</label>
+<input id="marketSymbol" value="RELIANCE" maxlength="30" placeholder="Example: RELIANCE">
+<br><br>
+<button id="marketBtn" onclick="runMarketAnalysis()">Generate Market Analysis</button>
+<div id="marketMsg" class="status"></div>
+<div id="marketResult"></div>
+</div><h3 style="color:var(--gold)">Supported Instruments</h3>
 <div class="grid" id="assetCards"></div>
-
 <hr>
-
 <h3>Latest Published Reports</h3>
-<p class="muted">
-Only reports available in the database are displayed.
-</p>
+<p class="muted">Only reports available in the database are displayed.</p>
 <div id="reportsContainer" class="muted">Loading reports...</div>
 </div>
-
-</section>
-
-<!-- SECTORS -->
-<section id="sectors" class="panel">
+</section><section id="sectors" class="panel">
 <div class="box">
 <h2>12 Sector Intelligence Matrix</h2>
-<p class="muted">
-Each sector is displayed separately. Missing reports are marked unavailable.
-</p>
+<p class="muted">Each sector is displayed separately. Missing reports are marked unavailable.</p>
 <div class="grid" id="sectorContainer"></div>
 </div>
-</section>
-
-<!-- MODELS -->
-<section id="models" class="panel">
+</section><section id="models" class="panel">
 <div class="box">
 <h2>Multi Model Research Centre</h2>
-<p class="muted">
-The following categories are kept separate to avoid mixing different research methods.
-</p>
+<p class="muted">Different research methods are kept separate.</p>
 <div class="grid">
-<div class="card">
-<h3>Vedic Astrology</h3>
-<p class="muted">Planetary transit and Vedic research reports.</p>
-<div id="vedicModel">No report selected.</div>
-</div>
-<div class="card">
-<h3>KP Astrology</h3>
-<p class="muted">KP and sub-lord research reports.</p>
-<div id="kpModel">No report selected.</div>
-</div>
-<div class="card">
-<h3>Numerology</h3>
-<p class="muted">Numerological research reports.</p>
-<div id="numModel">No report selected.</div>
-</div>
-<div class="card">
-<h3>Technical Analysis</h3>
-<p class="muted">Technical research and market structure.</p>
-<div id="techModel">No report selected.</div>
-</div>
-<div class="card">
-<h3>Combined Research</h3>
-<p class="muted">Combined summary from the published report.</p>
-<div id="combinedModel">No report selected.</div>
+<div class="card"><h3>Vedic Astrology</h3><p class="muted">Planetary transit and Vedic research reports.</p><div id="vedicModel">No report selected.</div></div>
+<div class="card"><h3>KP Astrology</h3><p class="muted">KP and sub-lord research reports.</p><div id="kpModel">No report selected.</div></div>
+<div class="card"><h3>Numerology</h3><p class="muted">Numerological research reports.</p><div id="numModel">No report selected.</div></div>
+<div class="card"><h3>Technical Analysis</h3><p class="muted">Technical research and market structure.</p><div id="techModel">No report selected.</div></div>
+<div class="card"><h3>Combined Research</h3><p class="muted">Combined summary from the published report.</p><div id="combinedModel">No report selected.</div></div>
 </div>
 </div>
-</div>
-</section>
-
-<!-- AUDIT -->
-<section id="backtest" class="panel">
+</section><section id="backtest" class="panel">
 <div class="box">
 <h2>Audit & Performance Hub</h2>
-<p class="muted">
-This section currently displays historical report records.
-It does not claim trading accuracy or verified backtesting.
-</p>
-
+<p class="muted">This section displays historical report records. It does not claim trading accuracy or verified backtesting.</p>
 <div class="grid">
-<div class="card">
-<div class="name">AVAILABLE REPORT RECORDS</div>
-<div class="price" id="statN">0</div>
+<div class="card"><div class="name">AVAILABLE REPORT RECORDS</div><div class="price" id="statN">0</div></div>
+<div class="card"><div class="name">VERIFIED BACKTEST ACCURACY</div><div class="price neutral">Not Available</div></div>
 </div>
-<div class="card">
-<div class="name">VERIFIED BACKTEST ACCURACY</div>
-<div class="price neutral">Not Available</div>
-</div>
-</div>
-
 <button class="secondary" onclick="loadAuditLogs()">Refresh Audit Logs</button>
 <div id="auditLogsContainer" style="margin-top:15px"></div>
-
 <hr>
 <h3>Backtesting Requirements</h3>
-<p class="muted">
-Verified backtesting requires saved historical predictions, their original timestamps,
-defined prediction horizons and actual historical market prices.
-Until those are integrated, accuracy and profit figures will not be displayed.
-</p>
+<p class="muted">Verified backtesting requires saved historical predictions, original timestamps, defined prediction horizons and actual historical market prices.</p>
 </div>
-</section>
-
-<!-- ADMIN -->
-<section id="admin" class="panel">
+</section><section id="admin" class="panel">
 <div class="box">
 <h2>Admin Command Centre</h2>
-<p class="muted">
-Publish a research report. Enter actual research findings; do not enter unverified claims.
-</p>
-
+<p class="muted">Publish a research report. Enter actual research findings; do not enter unverified claims.</p>
 <form id="adminForm">
-<label>Customer User UUID</label>
-<input id="admUser" required placeholder="Customer Supabase UUID">
-
-<label>Instrument / Sector Name</label>
-<input id="admInst" required placeholder="Example: Nifty 50 or Banking">
-
+<label>Customer User UUID</label><input id="admUser" required placeholder="Customer Supabase UUID">
+<label>Instrument / Sector Name</label><input id="admInst" required placeholder="Example: Nifty 50 or Banking">
 <label>Action Signal</label>
-<select id="admDir">
-<option value="Kharidari (Buy)">Buy</option>
-<option value="Bikwali (Sell)">Sell</option>
-<option value="Sideways">Sideways / Neutral</option>
-</select>
-
-<label>Vedic Analysis</label>
-<textarea id="admVedic" rows="3" required></textarea>
-
-<label>KP Analysis</label>
-<textarea id="admKP" rows="3" required></textarea>
-
-<label>Numerology Analysis</label>
-<textarea id="admNum" rows="3" required></textarea>
-
-<label>Technical Analysis</label>
-<textarea id="admTech" rows="3" required></textarea>
-
-<label>Combined Final Summary</label>
-<textarea id="admSum" rows="3" required></textarea>
-
-<br><br>
-<button id="publishBtn" type="submit">Publish Research Report</button>
+<select id="admDir"><option value="Kharidari (Buy)">Buy</option><option value="Bikwali (Sell)">Sell</option><option value="Sideways">Sideways / Neutral</option></select>
+<label>Vedic Analysis</label><textarea id="admVedic" rows="3" required></textarea>
+<label>KP Analysis</label><textarea id="admKP" rows="3" required></textarea>
+<label>Numerology Analysis</label><textarea id="admNum" rows="3" required></textarea>
+<label>Technical Analysis</label><textarea id="admTech" rows="3" required></textarea>
+<label>Combined Final Summary</label><textarea id="admSum" rows="3" required></textarea>
+<br><br><button id="publishBtn" type="submit">Publish Research Report</button>
 </form>
-
 <div id="admMsg" class="status"></div>
 </div>
 </section>
+</main><script>
+const SUPABASE_URL="https://ahrnjncdcsdmguhvhlfj.supabase.co";
+const SUPABASE_KEY="sb_publishable_ktg8SZPkNqOWie8OK2rtIQ_YBM22F9a";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-</main>
+const instruments=["Nifty 50","Bank Nifty","Sensex","Gold","Silver","Crude Oil","Natural Gas","USD/INR"];
+const sectors=["Banking","Information Technology","Pharma","Healthcare","Auto","FMCG","Metal","Energy","Realty","Infrastructure","Financial Services","Media"];
+let currentUser=null;
+let latestReports=[];
 
-<script>
-const SUPABASE_URL =
-"https://ahrnjncdcsdmguhvhlfj.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_ktg8SZPkNqOWie8OK2rtIQ_YBM22F9a";
-
-const db = window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
-
-const instruments = [
-"Nifty 50",
-"Bank Nifty",
-"Sensex",
-"Gold",
-"Silver",
-"Crude Oil",
-"Natural Gas",
-"USD/INR"
-];
-
-const sectors = [
-"Banking",
-"Information Technology",
-"Pharma",
-"Healthcare",
-"Auto",
-"FMCG",
-"Metal",
-"Energy",
-"Realty",
-"Infrastructure",
-"Financial Services",
-"Media"
-];
-
-let currentUser = null;
-let latestReports = [];
-
-function el(id){
-return document.getElementById(id);
-}
-
-function safeText(value){
-return String(value ?? "");
-}
-
-function makeNode(tag, text, className){
-const node = document.createElement(tag);
-node.textContent = safeText(text);
-if(className) node.className = className;
+function el(id){return document.getElementById(id)}
+function safeText(value){return String(value??"")}
+function makeNode(tag,text,className){
+const node=document.createElement(tag);
+node.textContent=safeText(text);
+if(className)node.className=className;
 return node;
 }
-
 function showMessage(id,text,type="ok"){
-const box = el(id);
-box.textContent = text;
-box.className = "status show " + type;
+const box=el(id);box.textContent=text;box.className="status show "+type;
 }
-
 function showSection(id){
-document.querySelectorAll(".panel").forEach(p=>{
-p.classList.remove("active");
-});
-
-el(id).classList.add("active");
-window.scrollTo(0,0);
-
-if(id==="terminal") loadCurrentData();
-if(id==="sectors") loadSectors();
-if(id==="backtest") loadAuditLogs();
-if(id==="models") loadModels();
+document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+el(id).classList.add("active");window.scrollTo(0,0);
+if(id==="terminal")loadCurrentData();
+if(id==="sectors")loadSectors();
+if(id==="backtest")loadAuditLogs();
+if(id==="models")loadModels();
 }
-
-function isAdmin(user){
-return user?.app_metadata?.role === "admin";
-}
-
+function isAdmin(user){return user?.app_metadata?.role==="admin"}
 function getSignal(summary){
-const value = safeText(summary).toLowerCase();
-
-if(value.includes("sideways") || value.includes("neutral")){
-return {label:"◆ SIDEWAYS / NEUTRAL",className:"neutral"};
+const value=safeText(summary).toLowerCase();
+if(value.includes("sideways")||value.includes("neutral"))return{label:"◆ SIDEWAYS / NEUTRAL",className:"neutral"};
+if(value.includes("kharidari")||value.includes("buy"))return{label:"▲ KHARIDARI / BUY",className:"buy"};
+if(value.includes("bikwali")||value.includes("sell"))return{label:"▼ BIKWALI / SELL",className:"sell"};
+return{label:"SIGNAL NOT SPECIFIED",className:"neutral"};
 }
-
-if(value.includes("kharidari") || value.includes("buy")){
-return {label:"▲ KHARIDARI / BUY",className:"buy"};
-}
-
-if(value.includes("bikwali") || value.includes("sell")){
-return {label:"▼ BIKWALI / SELL",className:"sell"};
-}
-
-return {label:"SIGNAL NOT SPECIFIED",className:"neutral"};
-}
-
 function formatTime(value){
-if(!value) return "Timestamp unavailable";
+if(!value)return"Timestamp unavailable";
+const date=new Date(value);
+return Number.isNaN(date.getTime())?"Invalid timestamp":date.toLocaleString("en-IN");
+}
 
-const date = new Date(value);
+/* NEW: Supabase EOD Market Analysis */
+async function runMarketAnalysis(){
+const button=el("marketBtn");
+const symbol=el("marketSymbol").value.trim().toUpperCase();
+el("marketResult").replaceChildren();
+if(!/^[A-Z0-9&-]{1,30}$/.test(symbol)){
+showMessage("marketMsg","Please enter a valid NSE stock symbol.","error");return;
+}
+button.disabled=true;
+button.textContent="Analysing...";
+showMessage("marketMsg","TejHQ EOD data fetch ho raha hai...","ok");
+try{
+const {data,error}=await db.functions.invoke("generate-market-analysis",{
+body:{symbol}
+});
+if(error)throw error;
+if(!data)throw new Error("Empty response from analysis function.");
+if(data.status==="DATA_TOO_OLD"){
+showMessage("marketMsg","Data purana hai. Isliye prediction generate nahi ki gayi.","error");
+renderMarketResult(data);return;
+}
+if(!data.success)throw new Error(data.error||"Analysis failed.");
+showMessage("marketMsg","Analysis successfully generated.","ok");
+renderMarketResult(data);
+}catch(error){
+showMessage("marketMsg","Analysis error: "+(error.message||String(error)),"error");
+}finally{
+button.disabled=false;
+button.textContent="Generate Market Analysis";
+}
+}
 
-if(Number.isNaN(date.getTime())) return "Invalid timestamp";
-
-return date.toLocaleString("en-IN");
+function renderMarketResult(data){
+const area=el("marketResult");
+area.replaceChildren();
+const signal=data.technical_analysis?.signal||"NOT AVAILABLE";
+const signalClass=signal==="BUY"?"buy":signal==="SELL"?"sell":"neutral";
+const card=document.createElement("div");card.className="report";
+card.appendChild(makeNode("h3",data.symbol+" — Technical Analysis","name"));
+card.appendChild(makeNode("div",signal,"price "+signalClass));
+const grid=document.createElement("div");grid.className="analysis-grid";
+const items=[
+["Data Source",data.source||"Unavailable"],
+["Latest EOD Date",data.latest_data_date||"Unavailable"],
+["Prediction Date",data.prediction_for_date||"Unavailable"],
+["Market Price",data.market_price??"Unavailable"],
+["Previous Close",data.previous_close??"Unavailable"],
+["Daily Change",data.change_percent!=null?data.change_percent+"%":"Unavailable"],
+["EMA 20",data.indicators?.ema20??"Unavailable"],
+["EMA 50",data.indicators?.ema50??"Unavailable"],
+["RSI 14",data.indicators?.rsi14??"Unavailable"],
+["Technical Score",data.technical_analysis?.score??"Unavailable"],
+["Model Estimate",data.technical_analysis?.confidence_percent!=null?data.technical_analysis.confidence_percent+"% (heuristic)":"Unavailable"]
+];
+items.forEach(([label,value])=>{
+const item=document.createElement("div");item.className="analysis-item";
+item.append(makeNode("b",label),makeNode("p",value));grid.appendChild(item);
+});
+card.appendChild(grid);
+if(data.message)card.appendChild(makeNode("p",data.message,"neutral"));
+if(data.warning)card.appendChild(makeNode("p",data.warning,"muted"));
+card.appendChild(makeNode("small","Fetched: "+formatTime(data.fetched_at),"muted"));
+area.appendChild(card);
 }
 
 function makeReportCard(report){
-const card = document.createElement("div");
-card.className = "report";
-
-const heading = document.createElement("h3");
-heading.className = "name";
-heading.textContent = safeText(report.report_title);
-
-const signal = getSignal(report.customer_summary);
-
-const signalNode = makeNode("div",signal.label,signal.className);
-
-const time = makeNode("small","Published: "+formatTime(report.created_at),"muted");
-
-const summary = document.createElement("p");
-summary.textContent = "Summary: "+safeText(report.customer_summary);
-
-const grid = document.createElement("div");
-grid.className = "analysis-grid";
-
-const fields = [
-["Vedic Analysis",report.vedic_analysis],
-["KP Analysis",report.kp_analysis],
-["Numerology Analysis",report.numerology_analysis],
-["Technical Analysis",report.sector_analysis]
-];
-
-fields.forEach(([title,value])=>{
-const item = document.createElement("div");
-item.className = "analysis-item";
-
-const strong = makeNode("b",title);
-const content = document.createElement("p");
-content.textContent = safeText(value) || "Not available";
-
-item.append(strong,content);
-grid.appendChild(item);
+const card=document.createElement("div");card.className="report";
+const heading=makeNode("h3",report.report_title,"name");
+const signal=getSignal(report.customer_summary);
+const signalNode=makeNode("div",signal.label,signal.className);
+const time=makeNode("small","Published: "+formatTime(report.created_at),"muted");
+const summary=makeNode("p","Summary: "+safeText(report.customer_summary));
+const grid=document.createElement("div");grid.className="analysis-grid";
+[["Vedic Analysis",report.vedic_analysis],["KP Analysis",report.kp_analysis],["Numerology Analysis",report.numerology_analysis],["Technical Analysis",report.sector_analysis]].forEach(([title,value])=>{
+const item=document.createElement("div");item.className="analysis-item";
+item.append(makeNode("b",title),makeNode("p",safeText(value)||"Not available"));grid.appendChild(item);
 });
-
-card.append(heading,signalNode,time,summary,grid);
-return card;
+card.append(heading,signalNode,time,summary,grid);return card;
 }
 
 async function loadCurrentData(){
-if(!currentUser){
-el("reportsContainer").textContent = "Please login first.";
-return;
-}
-
-el("assetCards").replaceChildren();
-el("reportsContainer").textContent = "Loading reports...";
-
-instruments.forEach(name=>{
-const card = document.createElement("div");
-card.className = "card";
-card.appendChild(makeNode("div",name,"name"));
-card.appendChild(makeNode("div","Report availability will appear below.","muted"));
-el("assetCards").appendChild(card);
-});
-
+if(!currentUser){el("reportsContainer").textContent="Please login first.";return}
+el("assetCards").replaceChildren();el("reportsContainer").textContent="Loading reports...";
 try{
-const {data,error} = await db
-.from("reports")
-.select("id,user_id,report_title,customer_summary,vedic_analysis,kp_analysis,numerology_analysis,sector_analysis,is_published,created_at")
-.eq("user_id",currentUser.id)
-.eq("is_published",true)
-.order("created_at",{ascending:false})
-.limit(100);
-
-if(error) throw error;
-
-latestReports = data || [];
-
-el("reportsContainer").replaceChildren();
-
-if(latestReports.length===0){
-el("reportsContainer").textContent = "No published reports found.";
-return;
-}
-
-const latestMap = new Map();
-
+const {data,error}=await db.from("reports").select("id,user_id,report_title,customer_summary,vedic_analysis,kp_analysis,numerology_analysis,sector_analysis,is_published,created_at").eq("user_id",currentUser.id).eq("is_published",true).order("created_at",{ascending:false}).limit(100);
+if(error)throw error;
+latestReports=data||[];el("reportsContainer").replaceChildren();
+const latestMap=new Map();
 latestReports.forEach(report=>{
-const title = safeText(report.report_title).toLowerCase();
-
-const match = instruments.find(name=>
-title.includes(name.toLowerCase())
-);
-
-if(match && !latestMap.has(match)){
-latestMap.set(match,report);
-}
+const title=safeText(report.report_title).toLowerCase();
+const match=instruments.find(name=>title.includes(name.toLowerCase()));
+if(match&&!latestMap.has(match))latestMap.set(match,report);
 });
-
-el("assetCards").replaceChildren();
-
 instruments.forEach(name=>{
-const card = document.createElement("div");
-card.className = "card";
-
+const card=document.createElement("div");card.className="card";
 card.appendChild(makeNode("h3",name,"name"));
-
-const report = latestMap.get(name);
-
+const report=latestMap.get(name);
 if(report){
-const signal = getSignal(report.customer_summary);
-card.appendChild(makeNode("div",signal.label,signal.className));
-card.appendChild(makeNode("small","Checked: "+formatTime(report.created_at),"muted"));
-}else{
-card.appendChild(makeNode("div","NO REPORT","neutral"));
-card.appendChild(makeNode("small","Research not available","muted"));
-}
-
+const signal=getSignal(report.customer_summary);
+card.append(makeNode("div",signal.label,signal.className),makeNode("small","Checked: "+formatTime(report.created_at),"muted"));
+}else card.append(makeNode("div","NO REPORT","neutral"),makeNode("small","Research not available","muted"));
 el("assetCards").appendChild(card);
 });
-
-latestReports.forEach(report=>{
-el("reportsContainer").appendChild(makeReportCard(report));
-});
-
-}catch(error){
-el("reportsContainer").textContent = "Error: "+error.message;
-}
+if(!latestReports.length)el("reportsContainer").textContent="No published reports found.";
+latestReports.forEach(report=>el("reportsContainer").appendChild(makeReportCard(report)));
+}catch(error){el("reportsContainer").textContent="Error: "+error.message}
 }
 
 async function loadSectors(){
-const area = el("sectorContainer");
-area.replaceChildren();
-
-if(!currentUser){
-area.textContent = "Please login first.";
-return;
-}
-
+const area=el("sectorContainer");area.replaceChildren();
+if(!currentUser){area.textContent="Please login first.";return}
 try{
-const {data,error} = await db
-.from("reports")
-.select("report_title,customer_summary,created_at")
-.eq("user_id",currentUser.id)
-.eq("is_published",true)
-.order("created_at",{ascending:false})
-.limit(200);
-
-if(error) throw error;
-
-const reports = data || [];
-
+const {data,error}=await db.from("reports").select("report_title,customer_summary,created_at").eq("user_id",currentUser.id).eq("is_published",true).order("created_at",{ascending:false}).limit(200);
+if(error)throw error;
+const reports=data||[];
 sectors.forEach(name=>{
-const card = document.createElement("div");
-card.className = "card";
-
-card.appendChild(makeNode("h3",name,"name"));
-
-const report = reports.find(r=>
-safeText(r.report_title).toLowerCase().includes(name.toLowerCase())
-);
-
+const card=document.createElement("div");card.className="card";card.appendChild(makeNode("h3",name,"name"));
+const report=reports.find(r=>safeText(r.report_title).toLowerCase().includes(name.toLowerCase()));
 if(report){
-const signal = getSignal(report.customer_summary);
-card.appendChild(makeNode("div",signal.label,signal.className));
-card.appendChild(makeNode("small","Checked: "+formatTime(report.created_at),"muted"));
-}else{
-card.appendChild(makeNode("div","NO SECTOR REPORT","neutral"));
-card.appendChild(makeNode("small","Data not available","muted"));
-}
-
+const signal=getSignal(report.customer_summary);
+card.append(makeNode("div",signal.label,signal.className),makeNode("small","Checked: "+formatTime(report.created_at),"muted"));
+}else card.append(makeNode("div","NO SECTOR REPORT","neutral"),makeNode("small","Data not available","muted"));
 area.appendChild(card);
 });
-
-}catch(error){
-area.textContent = "Error: "+error.message;
-}
+}catch(error){area.textContent="Error: "+error.message}
 }
 
 function loadModels(){
-const report = latestReports[0];
-
-const fields = [
-["vedicModel",report?.vedic_analysis],
-["kpModel",report?.kp_analysis],
-["numModel",report?.numerology_analysis],
-["techModel",report?.sector_analysis],
-["combinedModel",report?.customer_summary]
-];
-
-fields.forEach(([id,value])=>{
-el(id).textContent = value || "No published analysis available.";
-});
+const report=latestReports[0];
+[["vedicModel",report?.vedic_analysis],["kpModel",report?.kp_analysis],["numModel",report?.numerology_analysis],["techModel",report?.sector_analysis],["combinedModel",report?.customer_summary]].forEach(([id,value])=>el(id).textContent=value||"No published analysis available.");
 }
 
 async function loadAuditLogs(){
-const area = el("auditLogsContainer");
-
-if(!currentUser){
-area.textContent = "Please login first.";
-return;
-}
-
-area.textContent = "Loading historical reports...";
-
+const area=el("auditLogsContainer");
+if(!currentUser){area.textContent="Please login first.";return}
+area.textContent="Loading historical reports...";
 try{
-const {data,error} = await db
-.from("reports")
-.select("report_title,customer_summary,created_at")
-.eq("user_id",currentUser.id)
-.eq("is_published",true)
-.order("created_at",{ascending:false})
-.limit(100);
-
-if(error) throw error;
-
-const records = data || [];
-
-el("statN").textContent = records.length;
-area.replaceChildren();
-
-if(records.length===0){
-area.textContent = "No historical reports found.";
-return;
-}
-
+const {data,error}=await db.from("reports").select("report_title,customer_summary,created_at").eq("user_id",currentUser.id).eq("is_published",true).order("created_at",{ascending:false}).limit(100);
+if(error)throw error;
+const records=data||[];el("statN").textContent=records.length;area.replaceChildren();
+if(!records.length){area.textContent="No historical reports found.";return}
 records.forEach(report=>{
-const card = document.createElement("div");
-card.className = "report";
-
-card.appendChild(makeNode("b",report.report_title,"name"));
-card.appendChild(makeNode("p",report.customer_summary));
-card.appendChild(makeNode("small","Original report timestamp: "+formatTime(report.created_at),"muted"));
-
+const card=document.createElement("div");card.className="report";
+card.append(makeNode("b",report.report_title,"name"),makeNode("p",report.customer_summary),makeNode("small","Original report timestamp: "+formatTime(report.created_at),"muted"));
 area.appendChild(card);
 });
-
-}catch(error){
-area.textContent = "Audit error: "+error.message;
-}
+}catch(error){area.textContent="Audit error: "+error.message}
 }
 
 el("loginForm").addEventListener("submit",async event=>{
-event.preventDefault();
-
-const button = el("loginBtn");
-button.disabled = true;
-
+event.preventDefault();const button=el("loginBtn");button.disabled=true;
 try{
-const {data,error} = await db.auth.signInWithPassword({
-email:el("loginEmail").value.trim(),
-password:el("loginPassword").value
-});
-
-if(error) throw error;
-
-await checkAuthAndLoad(data.user);
-showMessage("loginMsg","Login successful.","ok");
-showSection("terminal");
-
-}catch(error){
-showMessage("loginMsg","Login failed: "+error.message,"error");
-}finally{
-button.disabled = false;
-}
+const {data,error}=await db.auth.signInWithPassword({email:el("loginEmail").value.trim(),password:el("loginPassword").value});
+if(error)throw error;
+await checkAuthAndLoad(data.user);showMessage("loginMsg","Login successful.","ok");showSection("terminal");
+}catch(error){showMessage("loginMsg","Login failed: "+error.message,"error")}
+finally{button.disabled=false}
 });
 
 async function checkAuthAndLoad(user){
-currentUser = user;
-
-el("userWelcome").textContent =
-"Connected: "+safeText(user.email);
-
-const admin = isAdmin(user);
-
-el("adminNav").classList.toggle("hidden",!admin);
-el("logoutBtn").classList.remove("hidden");
-
+currentUser=user;el("userWelcome").textContent="Connected: "+safeText(user.email);
+el("adminNav").classList.toggle("hidden",!isAdmin(user));el("logoutBtn").classList.remove("hidden");
 await loadCurrentData();
 }
 
 async function logout(){
-await db.auth.signOut();
-currentUser = null;
-latestReports = [];
-
-el("adminNav").classList.add("hidden");
-el("logoutBtn").classList.add("hidden");
-
-showSection("home");
+await db.auth.signOut();currentUser=null;latestReports=[];
+el("adminNav").classList.add("hidden");el("logoutBtn").classList.add("hidden");showSection("home");
 }
 
 el("adminForm").addEventListener("submit",async event=>{
 event.preventDefault();
-
-if(!currentUser || !isAdmin(currentUser)){
-showMessage("admMsg","Admin permission required.","error");
-return;
-}
-
-const button = el("publishBtn");
-button.disabled = true;
-
+if(!currentUser||!isAdmin(currentUser)){showMessage("admMsg","Admin permission required.","error");return}
+const button=el("publishBtn");button.disabled=true;
 try{
-const uid = el("admUser").value.trim();
-const instrument = el("admInst").value.trim();
-
-if(!uid || !instrument){
-throw new Error("Customer UUID and instrument are required.");
-}
-
-const direction = el("admDir").value;
-
-const {error} = await db.from("reports").insert({
-user_id:uid,
-report_title:instrument+" Research Report",
+const uid=el("admUser").value.trim();const instrument=el("admInst").value.trim();
+if(!uid||!instrument)throw new Error("Customer UUID and instrument are required.");
+const direction=el("admDir").value;
+const {error}=await db.from("reports").insert({
+user_id:uid,report_title:instrument+" Research Report",
 customer_summary:"Signal: "+direction+". "+el("admSum").value.trim(),
-vedic_analysis:el("admVedic").value.trim(),
-kp_analysis:el("admKP").value.trim(),
-numerology_analysis:el("admNum").value.trim(),
-sector_analysis:el("admTech").value.trim(),
-is_published:true
+vedic_analysis:el("admVedic").value.trim(),kp_analysis:el("admKP").value.trim(),
+numerology_analysis:el("admNum").value.trim(),sector_analysis:el("admTech").value.trim(),is_published:true
 });
-
-if(error) throw error;
-
-showMessage("admMsg","Report published successfully.","ok");
-event.target.reset();
-
-}catch(error){
-showMessage("admMsg","Publish failed: "+error.message,"error");
-}finally{
-button.disabled = false;
-}
+if(error)throw error;
+showMessage("admMsg","Report published successfully.","ok");event.target.reset();
+}catch(error){showMessage("admMsg","Publish failed: "+error.message,"error")}
+finally{button.disabled=false}
 });
 
 window.addEventListener("DOMContentLoaded",async()=>{
 try{
-const {data,error} = await db.auth.getSession();
-
-if(error) throw error;
-
-if(data.session?.user){
-await checkAuthAndLoad(data.session.user);
-}
-}catch(error){
-console.error(error);
-}
+const {data,error}=await db.auth.getSession();if(error)throw error;
+if(data.session?.user)await checkAuthAndLoad(data.session.user);
+}catch(error){console.error(error)}
 });
-</script>
-
-</body>
+</script></body>
 </html>
