@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ASTRO TRADE PRO - Live Institutional Intelligence Terminal</title>
+<title>ASTRO TRADE PRO - Live Instant Market Intelligence Terminal</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#07090e;--panel:#101520;--gold:#d8ad55;--text:#f5f0e5;--muted:#94a3b8;--line:#1e293b;--green:#10b981;--red:#ef4444;--accent:#3b82f6}
@@ -40,7 +40,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
     <button class="secondary" onclick="showSection('home')">Home</button>
     <button class="secondary" onclick="showSection('terminal')">Terminal</button>
     <button class="secondary" onclick="showSection('sectors')">Sectors</button>
-    <button class="secondary" onclick="showSection('backtest')">Backtest Hub</button>
+    <button class="secondary" onclick="showSection('backtest')">Audit Hub</button>
     <button class="secondary" onclick="showSection('login')">Login</button>
     <button id="adminNav" class="secondary hidden" onclick="showSection('admin')">Admin</button>
   </nav>
@@ -51,7 +51,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
     <div class="hero">
       <div style="color:var(--gold);letter-spacing:2px;font-size:12px">LIVE INSTANT MARKET INTELLIGENCE</div>
       <h1>Astro Trade Pro Terminal</h1>
-      <p style="color:var(--muted);max-width:700px;margin:15px auto">Instant real-time analysis generated on demand with zero time slots.</p>
+      <p style="color:var(--muted);max-width:700px;margin:15px auto">Zero Old Records. Only Current Live Timestamp Analysis.</p>
       <div style="margin-top:25px;display:flex;gap:10px;justify-content:center">
         <button onclick="showSection('terminal')">Launch Terminal</button>
         <button class="secondary" onclick="showSection('login')">Customer Login</button>
@@ -75,18 +75,18 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
   <section id="terminal" class="panel">
     <div class="box">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
-        <div><h2>Multi-Asset Intelligence Dashboard</h2><p class="muted" id="userWelcome">Connected to Live Database</p></div>
+        <div><h2>Multi-Asset Intelligence Dashboard</h2><p class="muted" id="userWelcome">Connected to Live Table</p></div>
         <button class="secondary" onclick="logout()">Disconnect</button>
       </div>
 
-      <!-- LIVE ASSET CARDS -->
+      <!-- DASHBOARD CARDS (SHOWS ONLY LATEST INSTANT CHECK) -->
       <div class="grid-assets" id="assetCardsContainer">
-        <div class="muted">Loading live asset feeds...</div>
+        <div class="muted">Loading live feeds...</div>
       </div>
 
       <div class="box" style="margin-top:20px;border-color:var(--gold)">
-        <h3>Run Instant Live Analysis</h3>
-        <p class="muted">Generates a fresh report instantly for the exact current second.</p>
+        <h3>Run Live Timestamp Analysis</h3>
+        <p class="muted">Replaces previous report instantly with current timestamp.</p>
         <div class="formgrid">
           <div>
             <label>Select Asset / Instrument</label>
@@ -107,12 +107,12 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
             </select>
           </div>
         </div>
-        <button id="generateBtn" onclick="generateInstantReport()">Run Instant Live Analysis</button>
+        <button id="generateBtn" onclick="generateTimestampReport()">Run Live Analysis Now</button>
         <div id="genMsg" class="status"></div>
       </div>
 
       <div style="margin-top:20px">
-        <h3>Live Real-Time Feed</h3>
+        <h3>Current Active Live Feed (Latest Only)</h3>
         <div id="reportsContainer" class="muted">Loading reports...</div>
       </div>
     </div>
@@ -122,7 +122,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
   <section id="sectors" class="panel">
     <div class="box">
       <h2>Sector Intelligence Matrix</h2>
-      <p class="muted">Clear-cut live status across assets and sectors[span_8](start_span)[span_8](end_span).</p>
+      <p class="muted">Clear-cut live status based strictly on latest check.</p>
       <div id="sectorContainer" class="grid-assets" style="margin-top:20px">
         <div class="muted">Loading sector matrix...</div>
       </div>
@@ -131,12 +131,12 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
 
   <section id="backtest" class="panel">
     <div class="box" style="border-color:var(--gold)">
-      <h2>Historical Audit Hub</h2>
+      <h2>Audit Hub</h2>
       <p class="muted">Verification logs.</p>
       <div class="grid-assets" style="margin-bottom:15px">
         <div class="asset-card"><div class="name">TOTAL AUDITED RECORDS</div><div class="price" id="statN" style="color:var(--gold)">0</div></div>
       </div>
-      <button class="secondary" onclick="loadBacktestAudits()">▶ Refresh Audit Logs</button>
+      <button class="secondary" onclick="loadAuditLogs()">▶ Refresh Audit Logs</button>
       <div id="auditLogsContainer" style="margin-top:15px" class="muted">Loading audits...</div>
     </div>
   </section>
@@ -144,7 +144,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
   <section id="admin" class="panel">
     <div class="box">
       <h2>Admin Command Center</h2>
-      <p class="muted">Publish instant live briefs.</p>
+      <p class="muted">Publish live brief.</p>
       <form id="adminForm" style="margin-top:15px">
         <label>Target User UUID (Auto-Filled)</label><input id="admUser" required readonly>
         <label>Instrument / Sector</label><input id="admInst" required value="Nifty 50">
@@ -154,7 +154,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid
         <label>Numerology Analysis</label><input id="admNum" value="Vibration score positive.">
         <label>Technical Analysis</label><input id="admTech" value="Volume breakout confirmed.">
         <label>Mixed Final Summary</label><textarea id="admSum" rows="2">Institutional flow active.</textarea>
-        <br><button type="submit">Publish Instant Brief</button>
+        <br><button type="submit">Publish Brief</button>
       </form>
       <div id="admMsg" class="status"></div>
     </div>
@@ -170,17 +170,19 @@ function showSection(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
-  if(id==='terminal') { loadInstantDashboard(); loadInstantReports(); }
-  if(id==='sectors') loadInstantSectors();
-  if(id==='backtest') loadBacktestAudits();
+  if(id==='terminal') { loadCurrentOnlyData(); }
+  if(id==='sectors') loadCurrentOnlySectors();
+  if(id==='backtest') loadAuditLogs();
 }
 function msg(id,txt,type='ok'){const el=document.getElementById(id);el.textContent=txt;el.className='status show '+type;}
 
-// Load unique live instant report per asset
-async function loadInstantDashboard() {
+// Strictly filters out old records and displays ONLY the absolute latest check per asset
+async function loadCurrentOnlyData() {
   const instruments = ['Nifty 50', 'Bank Nifty', 'Gold', 'Silver', 'Crude Oil'];
   const container = document.getElementById('assetCardsContainer');
+  const reportsArea = document.getElementById('reportsContainer');
   container.innerHTML = '';
+  reportsArea.innerHTML = '';
   
   try {
     const {data, error} = await db.from('reports')
@@ -188,11 +190,23 @@ async function loadInstantDashboard() {
       .order('created_at', {ascending: false});
     if(error) throw error;
     
+    // Map absolute latest report per instrument uniquely
+    const latestMap = new Map();
+    if(data) {
+      data.forEach(r => {
+        instruments.forEach(inst => {
+          if((r.report_title || '').toLowerCase().includes(inst.toLowerCase()) && !latestMap.has(inst)) {
+            latestMap.set(inst, r);
+          }
+        });
+      });
+    }
+    
+    // Render Dashboard Cards
     instruments.forEach(inst => {
       const card = document.createElement('div');
       card.className = 'asset-card';
-      
-      const match = data ? data.find(r => (r.report_title || '').toLowerCase().includes(inst.toLowerCase())) : null;
+      const match = latestMap.get(inst);
       
       if(match) {
         const isBuy = (match.customer_summary || '').toLowerCase().includes('kharidari') || (match.customer_summary || '').toLowerCase().includes('buy');
@@ -203,7 +217,7 @@ async function loadInstantDashboard() {
         card.innerHTML = `
           <div class="name">${inst.toUpperCase()}</div>
           <div class="price" style="color:${color};font-size:16px">${actionText}</div>
-          <small class="muted" style="display:block;margin-top:4px;"><b>Updated:</b> ${new Date(match.created_at).toLocaleTimeString()}</small>
+          <small class="muted" style="display:block;margin-top:4px;"><b>Checked at:</b> ${new Date(match.created_at).toLocaleTimeString()}</small>
         `;
       } else {
         card.style.borderColor = 'var(--muted)';
@@ -215,30 +229,21 @@ async function loadInstantDashboard() {
       }
       container.appendChild(card);
     });
-  } catch(err) {
-    container.innerHTML = `<div class="status error show">Error: ${err.message}</div>`;
-  }
-}
 
-// Load instant non-repetitive reports feed
-async function loadInstantReports() {
-  const area = document.getElementById('reportsContainer');
-  try {
-    const {data, error} = await db.from('reports')
-      .select('*')
-      .order('created_at', {ascending: false})
-      .limit(6);
-    if(error) throw error;
-    if(!data || data.length === 0){ area.innerHTML='<div class="muted">No reports found.</div>'; return; }
-    
-    area.innerHTML = '';
-    data.forEach(r => {
+    // Render Feed strictly showing ONLY the latest unique current check records (NO old garbage)
+    const uniqueReports = Array.from(latestMap.values());
+    if(uniqueReports.length === 0) {
+      reportsArea.innerHTML = '<div class="muted">No active reports found. Run analysis above.</div>';
+      return;
+    }
+
+    uniqueReports.forEach(r => {
       const card = document.createElement('div');
       card.className = 'report-card';
       card.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center">
           <h4 style="color:var(--gold);margin:0">${r.report_title}</h4>
-          <span class="pill">${new Date(r.created_at.replace('Z','')).toLocaleTimeString()}</span>
+          <span class="pill">${new Date(r.created_at).toLocaleTimeString()}</span>
         </div>
         <p style="margin:6px 0;font-size:13px"><b>Summary:</b> ${r.customer_summary}</p>
         <div class="analysis-grid">
@@ -248,29 +253,39 @@ async function loadInstantReports() {
           <div class="analysis-item"><b>Technical:</b> ${r.sector_analysis || 'N/A'}</div>
         </div>
       `;
-      area.appendChild(card);
+      reportsArea.appendChild(card);
     });
+
   } catch(err) {
-    area.innerHTML = `<div class="status error show">Error: ${err.message}</div>`;
+    container.innerHTML = `<div class="status error show">Error: ${err.message}</div>`;
   }
 }
 
-// Load instant sector matrix
-async function loadInstantSectors() {
+async function loadCurrentOnlySectors() {
   const area = document.getElementById('sectorContainer');
   try {
     const {data, error} = await db.from('reports')
       .select('*')
-      .order('created_at', {ascending: false})
-      .limit(6);
+      .order('created_at', {ascending: false});
     if(error) throw error;
     if(!data || data.length === 0) {
       area.innerHTML = '<div class="muted">No sector records found.</div>';
       return;
     }
     
-    area.innerHTML = '';
+    const latestMap = new Map();
+    const instruments = ['Nifty 50', 'Bank Nifty', 'Gold', 'Silver', 'Crude Oil'];
     data.forEach(r => {
+      instruments.forEach(inst => {
+        if((r.report_title || '').toLowerCase().includes(inst.toLowerCase()) && !latestMap.has(inst)) {
+          latestMap.set(inst, r);
+        }
+      });
+    });
+    
+    const uniqueSectors = Array.from(latestMap.values());
+    area.innerHTML = '';
+    uniqueSectors.forEach(r => {
       const isBuy = (r.customer_summary || '').toLowerCase().includes('kharidari') || (r.customer_summary || '').toLowerCase().includes('buy');
       const color = isBuy ? 'var(--green)' : 'var(--red)';
       const signal = isBuy ? '▲ KHARIDARI (BUY)' : '▼ BIKWALI (SELL)';
@@ -281,7 +296,7 @@ async function loadInstantSectors() {
       card.innerHTML = `
         <div class="name">${r.report_title}</div>
         <div class="price" style="color:${color};font-size:16px">${signal}</div>
-        <small class="muted" style="display:block;margin-top:4px;">${r.customer_summary}</small>
+        <small class="muted" style="display:block;margin-top:4px;">Checked: ${new Date(r.created_at).toLocaleTimeString()}</small>
       `;
       area.appendChild(card);
     });
@@ -306,8 +321,8 @@ document.getElementById('loginForm').addEventListener('submit', async e=>{
   }finally{ btn.disabled=false; }
 });
 
-async function generateInstantReport(){
-  const btn = document.getElementById('generateBtn'); btn.disabled=true; btn.textContent='Processing...';
+async function generateTimestampReport(){
+  const btn = document.getElementById('generateBtn'); btn.disabled=true; btn.textContent='Processing Live Time...';
   try{
     const {data:{user}, error:uErr} = await db.auth.getUser();
     if(uErr || !user) throw new Error('Session expired. Please login.');
@@ -316,50 +331,37 @@ async function generateInstantReport(){
     const direction = document.getElementById('genDir').value;
     const now = new Date();
     
+    // Inserts fresh record with exact current timestamp
     const {data:rep, error:rErr} = await db.from('reports').insert({
       user_id: user.id,
-      report_title: `${inst} Instant Live Report`,
-      customer_summary: `Signal: ${direction}. Verified at ${now.toLocaleTimeString()}.`,
-      vedic_analysis: "Planetary transit active.",
-      kp_analysis: "Sub-lord supports direction.",
-      numerology_analysis: "Vibration score optimal.",
-      sector_analysis: "Volume profile stable.",
+      report_title: `${inst} Live Report`,
+      customer_summary: `Signal: ${direction}. Checked live at ${now.toLocaleTimeString()}.`,
+      vedic_analysis: "Planetary transit active for current hour.",
+      kp_analysis: "Sub-lord confirms instant momentum.",
+      numerology_analysis: "Vibration score aligned with current time.",
+      sector_analysis: "Volume profile updated.",
       is_published: true
     }).select().single();
     if(rErr) throw rErr;
 
-    await db.from('historical_predictions').insert({
-      report_id: rep.id,
-      user_id: user.id,
-      report_date: now.toISOString().split('T')[0],
-      report_timestamp: now.toISOString(),
-      report_type: "Instant Live",
-      instrument: inst,
-      predicted_direction: direction,
-      confidence_score: 95,
-      model_version: "v6.0-instant"
-    });
-
-    msg('genMsg','Instant live report generated successfully!','ok');
-    loadInstantReports();
-    loadInstantDashboard();
-    loadInstantSectors();
+    msg('genMsg','Live report generated for current timestamp!','ok');
+    loadCurrentOnlyData();
   }catch(err){
     msg('genMsg','Error: '+err.message,'error');
-  }finally{ btn.disabled=false; btn.textContent='Run Instant Live Analysis'; }
+  }finally{ btn.disabled=false; btn.textContent='Run Live Analysis Now'; }
 }
 
-async function loadBacktestAudits(){
+async function loadAuditLogs(){
   const area = document.getElementById('auditLogsContainer');
   try{
-    const {data, error} = await db.from('historical_predictions').select('*').order('report_timestamp', {ascending:false}).limit(20);
+    const {data, error} = await db.from('reports').select('*').order('created_at', {ascending:false}).limit(20);
     if(error) throw error;
     if(!data || data.length===0){ area.innerHTML='<div class="muted">No audit records found.</div>'; document.getElementById('statN').textContent='0'; return; }
     area.innerHTML='';
     data.forEach(p=>{
       const card = document.createElement('div'); card.className='report-card';
-      card.innerHTML=`<span class="pill">AUDIT</span> <b style="color:var(--gold)">${p.instrument}</b> - Signal: <span style="color:var(--green)">${p.predicted_direction}</span>
-      <small style="display:block;color:var(--muted);margin-top:2px;">Time: ${new Date(p.report_timestamp.replace('Z','')).toLocaleTimeString()}</small>`;
+      card.innerHTML=`<span class="pill">AUDIT</span> <b style="color:var(--gold)">${p.report_title}</b>
+      <small style="display:block;color:var(--muted);margin-top:2px;">Timestamp: ${new Date(p.created_at).toLocaleTimeString()}</small>`;
       area.appendChild(card);
     });
     document.getElementById('statN').textContent = data.length;
@@ -371,7 +373,6 @@ async function loadBacktestAudits(){
 document.getElementById('adminForm').addEventListener('submit', async e=>{
   e.preventDefault();
   try{
-    const now = new Date();
     const uid = document.getElementById('admUser').value.trim();
     if(!uid) throw new Error('User UUID missing.');
     const inst = document.getElementById('admInst').value;
@@ -379,7 +380,7 @@ document.getElementById('adminForm').addEventListener('submit', async e=>{
     
     const {data:rep, error} = await db.from('reports').insert({
       user_id: uid,
-      report_title: `${inst} Master Brief`,
+      report_title: `${inst} Brief`,
       customer_summary: `Signal: ${direction}. ${document.getElementById('admSum').value}`,
       vedic_analysis: document.getElementById('admVedic').value,
       kp_analysis: document.getElementById('admKP').value,
@@ -389,20 +390,10 @@ document.getElementById('adminForm').addEventListener('submit', async e=>{
     }).select().single();
     if(error) throw error;
 
-    await db.from('historical_predictions').insert({
-      report_id: rep.id,
-      user_id: uid,
-      report_date: now.toISOString().split('T')[0],
-      report_timestamp: now.toISOString(),
-      report_type: "Admin Instant",
-      instrument: inst,
-      predicted_direction: direction,
-      confidence_score: 98,
-      model_version: "v6.0-admin"
-    });
-    alert('Instant brief published successfully!');
+    alert('Live brief published successfully!');
     e.target.reset();
     document.getElementById('admUser').value = uid;
+    loadCurrentOnlyData();
   }catch(err){ alert('Failed: '+err.message); }
 });
 
@@ -410,7 +401,7 @@ async function checkAuthAndLoad(user){
   document.getElementById('userWelcome').textContent = `Connected: ${user.email}`;
   document.getElementById('admUser').value = user.id;
   document.getElementById('adminNav').classList.toggle('hidden', false);
-  loadInstantReports();
+  loadCurrentOnlyData();
 }
 
 async function logout(){ await db.auth.signOut(); showSection('home'); }
