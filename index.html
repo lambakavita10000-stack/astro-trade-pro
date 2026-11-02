@@ -240,6 +240,7 @@ button.textContent="Analysing...";
 showMessage("marketMsg","TejHQ EOD data fetch ho raha hai...","ok");
 
 try{
+// FIXED: Matched exact edge function name with hyphen from Supabase dashboard[span_1](start_span)[span_1](end_span)
 const {data,error}=await db.functions.invoke("generate-market-analysis-",{
 body:{symbol}
 });
@@ -433,7 +434,6 @@ area.textContent="Error: "+error.message;
 }
 }
 
-// Fixed loadModels function to handle direct navigation without visiting terminal first
 async function loadModels(){
 if(!currentUser){
 ["vedicModel","kpModel","numModel","techModel","combinedModel"].forEach(id=>{
@@ -509,92 +509,80 @@ el("loginForm").addEventListener("submit",async event=>{
 event.preventDefault();
 const button=el("loginBtn");
 button.disabled=true;
+button.textContent="Authenticating...";
+showMessage("loginMsg","Logging in...","ok");
 
 try{
-const {data,error}=await db.auth.signInWithPassword({
-email:el("loginEmail").value.trim(),
-password:el("loginPassword").value
-});
+const email=el("loginEmail").value.trim();
+const password=el("loginPassword").value;
 
+const {data,error}=await db.auth.signInWithPassword({email,password});
 if(error)throw error;
 
-await checkAuthAndLoad(data.user);
-showMessage("loginMsg","Login successful.","ok");
-showSection("terminal");
+currentUser=data.user;
+showMessage("loginMsg","Login successful!","ok");
+el("userWelcome").textContent="Logged in as: "+currentUser.email;
 
+el("logoutBtn").classList.remove("hidden");
+if(isAdmin(currentUser))el("adminNav").classList.remove("hidden");
+
+showSection("terminal");
 }catch(error){
 showMessage("loginMsg","Login failed: "+error.message,"error");
 }finally{
 button.disabled=false;
+button.textContent="Authenticate";
 }
 });
-
-async function checkAuthAndLoad(user){
-currentUser=user;
-el("userWelcome").textContent="Connected: "+safeText(user.email);
-el("adminNav").classList.toggle("hidden",!isAdmin(user));
-el("logoutBtn").classList.remove("hidden");
-await loadCurrentData();
-}
 
 async function logout(){
 await db.auth.signOut();
 currentUser=null;
-latestReports=[];
-el("adminNav").classList.add("hidden");
 el("logoutBtn").classList.add("hidden");
+el("adminNav").classList.add("hidden");
+el("userWelcome").textContent="Please login to access your reports.";
 showSection("home");
 }
 
 el("adminForm").addEventListener("submit",async event=>{
 event.preventDefault();
-
-if(!currentUser||!isAdmin(currentUser)){
-showMessage("admMsg","Admin permission required.","error");
-return;
-}
-
 const button=el("publishBtn");
 button.disabled=true;
+button.textContent="Publishing...";
+showMessage("admMsg","Publishing research report...","ok");
 
 try{
-const uid=el("admUser").value.trim();
-const instrument=el("admInst").value.trim();
-
-if(!uid||!instrument)throw new Error("Customer UUID and instrument are required.");
-
-const direction=el("admDir").value;
-
-const {error}=await db.from("reports").insert({
-user_id:uid,
-report_title:instrument+" Research Report",
-customer_summary:"Signal: "+direction+". "+el("admSum").value.trim(),
+const payload={
+user_id:el("admUser").value.trim(),
+report_title:el("admInst").value.trim(),
+customer_summary:el("admDir").value,
 vedic_analysis:el("admVedic").value.trim(),
 kp_analysis:el("admKP").value.trim(),
 numerology_analysis:el("admNum").value.trim(),
 sector_analysis:el("admTech").value.trim(),
 is_published:true
-});
+};
 
+const {error}=await db.from("reports").insert([payload]);
 if(error)throw error;
 
-showMessage("admMsg","Report published successfully.","ok");
-event.target.reset();
-
+showMessage("admMsg","Research report successfully published!","ok");
+el("adminForm").reset();
 }catch(error){
-showMessage("admMsg","Publish failed: "+error.message,"error");
+showMessage("admMsg","Publish error: "+error.message,"error");
 }finally{
 button.disabled=false;
+button.textContent="Publish Research Report";
 }
 });
 
-window.addEventListener("DOMContentLoaded",async()=>{
-try{
-const {data,error}=await db.auth.getSession();
-if(error)throw error;
-if(data.session?.user)await checkAuthAndLoad(data.session.user);
-}catch(error){
-console.error(error);
+// Initial session check on load
+db.auth.getSession().then(({data:{session}})=>{
+if(session?.user){
+currentUser=session.user;
+el("logoutBtn").classList.remove("hidden");
+el("userWelcome").textContent="Logged in as: "+currentUser.email;
+if(isAdmin(currentUser))el("adminNav").classList.remove("hidden");
 }
 });
 </script>
